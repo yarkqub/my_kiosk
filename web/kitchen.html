@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <div id="order_list"></div>
+    <script>
+        (() => {
+            const socket = io()
+            const order_list = document.querySelector("#order_list")
+            socket.emit("order")
+            socket.on("orders", data => {
+                order_list.innerHTML = `<h1>Orders:</h1>`
+                for (let i = data.length - 1; i >= 0; i--) {
+                    if (data[i].status != 0) {
+                        let items = ""
+                        data[i].items.forEach(di => {
+                            items += `<br>&nbsp;&nbsp;- ${di.name} &times; ${di.cart_qty}`
+                        })
+                        order_list.insertAdjacentHTML('beforeend', `<b>#${data[i].id} [${data[i].status}]</b> ${items}<hr>`)
+                    }
+                }
+            })
+        })()
+    </script>
+</body>
+
+</html>

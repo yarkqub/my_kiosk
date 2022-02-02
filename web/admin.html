@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosk</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    Admin Panel
+    <div id="panel"></div>
+    <script>
+        (() => {
+            let socket = io();
+            socket.on("get_item", res => {
+                list_item.innerHTML = "";
+                res.forEach(re => {
+                    document.querySelector("#list_item").insertAdjacentHTML("beforeend", `${re.code} - ${re.name} (RM ${re.price}) [${re.qty}]<br>`)
+                })
+            })
+            socket.on("admin", res => {
+                if (!res) {
+                    pass()
+                }
+                else {
+                    panel.innerHTML = `Welcome!<hr>
+                    <h3>Add item</h3>
+                    <div id='add_error'></div>
+                    code: <input type='text' id='add_code'><br>
+                    Name: <input type='text' id='add_name'><br>
+                    Price: <input type='number' step='0.01' id='add_price'><br>
+                    Qty: <input type='number' id='add_qty' min='0' value='1'><br>
+                    <button id='add_item'>Add</button>
+                    <hr>
+                    <button id='item_list'>Item List</button>
+                    <div id='list_item'></div>
+                    `
+                }
+            })
+            pass()
+            function pass() {
+                let password = prompt("Password")
+                socket.emit("admin", password)
+
+            }
+
+            click("#item_list", e => {
+                list_item.innerHTML = `Loading item...`
+                socket.emit("get_item")
+            })
+
+            click("#add_item", e => {
+                if (add_code.value && add_name.value && add_price.value && add_qty.value) {
+                    socket.emit("add_item", {
+                        "code": add_code.value,
+                        "name": add_name.value,
+                        "price": add_price.value,
+                        "qty": add_qty.value
+                    })
+                    add_code.value = add_name.value = add_price.value = add_qty.value = ""
+                }
+                else {
+                    add_error.innerHTML = `Please fill all form!`
+                }
+            })
+
+
+
+        })()
+        function click(selector, callback) {
+            document.addEventListener("click", e => {
+                if (e.target.matches(selector)) callback(e.target)
+            })
+        }
+    </script>
+</body>
+
+</html>
