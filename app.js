@@ -73,6 +73,7 @@ io.on('connection', (socket) => {
         let data_string = JSON.stringify(get_order)
         fs.writeFileSync('order.json', data_string)
     })
+
     socket.on("add_item", data => {
         let get_data = JSON.parse(fs.readFileSync('item.json'))
         let find1 = get_data.some(item => item.code == data.code)
