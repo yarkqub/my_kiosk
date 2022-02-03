@@ -43,7 +43,7 @@
         #pos {
             display: grid;
             grid-gap: 4px;
-            max-height: 85vh;
+            max-height: 88vh;
             overflow: auto;
         }
 
@@ -111,7 +111,7 @@
     POS ID: <span id="id"></span>
     <hr>
     <div id="pos">
-        <div id="barcode"></div>
+        <div id="barcode">Code: <input id="code" type="text"></div>
         <div id="item_list"></div>
         <div id="recipt_items"></div>
         <div id="history"></div>
@@ -134,6 +134,7 @@
         const item_list = document.querySelector("#item_list")
         const recipt_items = document.querySelector("#recipt_items")
         const history = document.querySelector("#history")
+        const code = document.querySelector("#code")
 
         setTimeout(() => { ready() }, 1000)
         function ready() {
@@ -146,7 +147,7 @@
             items_data = data
             item_list.innerHTML = ""
             data.forEach(element => {
-                item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}</div>`)
+                item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}]</div>`)
             });
         })
 
@@ -192,6 +193,31 @@
             })
             recipt_items.insertAdjacentHTML("beforeend", `<br>RM ${total.toFixed(2)}`)
         }
+
+        code.addEventListener("keyup", data => {
+            if (data.which == 13) {
+                let code_ = code.value.split("*")
+                if (!code_[1]) {
+                    code_[1] = 1
+                }
+                let check_item = items_data.some(item_data => item_data.code == code_[0])
+                if (check_item) {
+                    let check_cart = carts.some(item_cart => item_cart.code == code_[0])
+                    if (!check_cart) {
+                        let make_cart = items_data.find(item_data => item_data.code == code_[0])
+                        make_cart.cart_qty = code_[1]
+                        carts.push(make_cart)
+                    }
+                    else {
+                        let get_cart = carts.find(crt => crt.code == code_[0])
+                        get_cart.cart_qty = Number(get_cart.cart_qty) + Number(code_[1])
+                    }
+                    code.value = ""
+                    update_carts()
+                }
+
+            }
+        })
 
         click2(".do_remove", data => {
             let index = data.target.parentNode.getAttribute("data-index")
