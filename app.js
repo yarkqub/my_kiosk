@@ -83,7 +83,7 @@ io.on('connection', (socket) => {
             fs.writeFileSync('item.json', data_string)
             let get = JSON.parse(fs.readFileSync("item.json"))
             items = get
-            socket.emit("get_item", get)
+            io.emit("get_item", get)
         }
     })
 });

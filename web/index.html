@@ -20,12 +20,11 @@
             grid-column: 1 / span 5;
             grid-row: 2 / span 2;
             padding: 8px;
-
+            justify-content: start;
         }
 
         .items {
             min-width: 30px;
-            height: 30px;
             border: 1px solid black;
             background: lightblue;
             text-align: center;
@@ -37,12 +36,14 @@
             background: red;
             grid-column: 6 / span 2;
             padding: 8px;
+            height: 70vh;
+            overflow-y: scroll;
         }
 
         #pos {
             display: grid;
             grid-gap: 4px;
-            max-height: 90vh;
+            max-height: 85vh;
             overflow: auto;
         }
 
@@ -57,7 +58,7 @@
             grid-column: 8 / span 2;
             background: yellow;
             grid-row: span 2;
-            max-height: 80vh;
+            height: 70vh;
             overflow-y: scroll;
         }
 
@@ -77,6 +78,32 @@
             width: 30px;
             height: 30px;
         }
+
+        .rec_list {
+            background: lightblue;
+            border: 1px solid black;
+            padding: 8px;
+            margin: 4px 0px;
+            list-style: none;
+        }
+
+        /* width */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px grey;
+            border-radius: 10px;
+            background: white;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: black;
+            border-radius: 10px;
+        }
     </style>
 </head>
 
@@ -85,8 +112,8 @@
     <hr>
     <div id="pos">
         <div id="barcode"></div>
-        <div id="recipt_items"></div>
         <div id="item_list"></div>
+        <div id="recipt_items"></div>
         <div id="history"></div>
         <div id="checkout">
             <button id="do_checkout">Checkout</button>
@@ -132,7 +159,7 @@
             history.innerHTML = `Orders:`
             for (let i = data.length - 1; i >= 0; i--) {
                 if (data[i].status != 0) {
-                    history.insertAdjacentHTML('beforeend', `<li class='ordered' data-id='${data[i].id}' data-status='${data[i].status}'>#${data[i].id} [${data[i].status}]</li>`)
+                    history.insertAdjacentHTML('beforeend', `<li class='rec_list ordered' data-id='${data[i].id}' data-status='${data[i].status}'>#${data[i].id} [${data[i].status}]</li>`)
                 }
             }
         })
@@ -152,15 +179,15 @@
         })
 
         function update_carts() {
-            recipt_items.innerHTML = `<b>#${order_id}</b> [DebugStatus:${order_status}]<br>`
+            recipt_items.innerHTML = `<b>Order #${order_id}</b><br>`
             let total = 0
             carts.forEach((crt, i) => {
                 total += Number(crt.price) * Number(crt.cart_qty)
                 if (order_status == 3) {
-                    recipt_items.insertAdjacentHTML("beforeend", `<li>${crt.name} [RM ${crt.price}] | QTY: ${crt.cart_qty}</li>`)
+                    recipt_items.insertAdjacentHTML("beforeend", `<li class='rec_list'>${crt.name} [RM ${crt.price}] | QTY: ${crt.cart_qty}</li>`)
                 }
                 else {
-                    recipt_items.insertAdjacentHTML("beforeend", `<li data-index='${i}'><button class='btn do_remove'>&times;</button> ${crt.name} [RM ${crt.price}] | QTY: ${crt.cart_qty} <button class='btn do_sub'>-</button> <button class='btn do_add'>+</button></li>`)
+                    recipt_items.insertAdjacentHTML("beforeend", `<li class='rec_list' data-index='${i}'><button class='btn do_remove'>&times;</button> ${crt.name} [RM ${crt.price}] |<br> QTY: ${crt.cart_qty} <button class='btn do_sub'>-</button> <button class='btn do_add'>+</button></li>`)
                 }
             })
             recipt_items.insertAdjacentHTML("beforeend", `<br>RM ${total.toFixed(2)}`)
