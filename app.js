@@ -5,6 +5,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const fs = require('fs');
+const electron = require('electron')
 const admin_password = '123'
 
 let items = []
@@ -87,6 +88,19 @@ io.on('connection', (socket) => {
         }
     })
 });
+
+const createWindow = () => {
+  const win = new electron.BrowserWindow({
+    kiosk: true,
+    autoHideMenuBar: true
+  })
+
+  win.loadURL('http://localhost:3000')
+}
+
+electron.app.whenReady().then(() => {
+  createWindow()
+})
 
 server.listen(3000, () => {
     console.log('listening on *:3000');
