@@ -15,29 +15,44 @@
         #item_list {
             display: grid;
             grid-gap: 5px;
-            grid-template-columns: auto auto auto auto auto;
-            background: green;
+            grid-template-columns: repeat(5, minmax(50px, 100%));
+            background: #607d8b;
             grid-column: 1 / span 5;
             grid-row: 2 / span 2;
             padding: 8px;
             justify-content: start;
+            overflow-y: scroll;
+            max-height: 70vh;
+            border: 2px solid black;
+            border-radius: 8px;
         }
 
         .items {
             min-width: 30px;
             border: 1px solid black;
-            background: lightblue;
+            background: #b2ebf2;
             text-align: center;
             cursor: pointer;
             user-select: none;
+            min-height: 100px;
+            max-height: 200px;
+            border-radius: 8px;
+            box-shadow: #ffeb3b 1px 1px 3px 0px;
+        }
+
+        .items:hover {
+            border: 1px solid #ffeb3b;
+            box-shadow: #ffeb3b 1px 1px 0px 0px;
         }
 
         #recipt_items {
-            background: red;
+            background: #cddc39;
             grid-column: 6 / span 2;
             padding: 8px;
             height: 70vh;
             overflow-y: scroll;
+            border-radius: 8px;
+            border: 2px solid black;
         }
 
         #pos {
