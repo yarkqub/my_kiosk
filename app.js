@@ -5,8 +5,16 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const fs = require('fs');
-const electron = require('electron')
 const admin_password = '123'
+const port = process.env.PORT || 3001;
+const electron = require('electron');
+
+if (!fs.existsSync('item.json')) {
+    fs.writeFileSync('item.json', '[]');
+}
+if (!fs.existsSync('order.json')) {
+    fs.writeFileSync('order.json', '[]');
+}
 
 let items = []
 
@@ -89,19 +97,16 @@ io.on('connection', (socket) => {
     })
 });
 
+//create electron window
 const createWindow = () => {
-  const win = new electron.BrowserWindow({
-    kiosk: true,
-    autoHideMenuBar: true
-  })
-
-  win.loadURL('http://localhost:3000')
+    const win = new electron.BrowserWindow({
+        kiosk: true,
+        autoHideMenuBar: true
+    });
+    win.loadURL(`http://127.0.0.1:${port}`);
 }
+electron.app.whenReady().then(createWindow);
 
-electron.app.whenReady().then(() => {
-  createWindow()
-})
-
-server.listen(3000, () => {
-    console.log('listening on *:3000');
+server.listen(port, () => {
+    console.log(`listening on *: ${port}`);
 });
