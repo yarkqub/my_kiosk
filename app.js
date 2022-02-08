@@ -6,7 +6,7 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const fs = require('fs');
 const admin_password = '123'
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 const electron = require('electron');
 
 if (!fs.existsSync('item.json')) {
