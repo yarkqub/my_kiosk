@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyKiosk Client</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        #body_warper {
+            display: grid;
+            grid-gap: 5px;
+            grid-template-columns: 3fr 1fr;
+        }
+
+        #my_order {
+            background: #00e1ff;
+            grid-row: 1;
+        }
+
+        #item_list {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(auto, 100%));
+            grid-gap: 5px;
+            grid-row: 1 / span 2;
+            overflow-y: scroll;
+        }
+
+        #checkout {
+            background: #00ffbf;
+            grid-row: 2;
+        }
+
+        .item {
+            background: #0000ff;
+            min-height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="body_warper">
+        <div id="item_list"></div>
+        <div id="my_order">My order</div>
+        <div id="checkout">Chckout</div>
+    </div>
+    <script>
+        (() => {
+            const socket = io();
+            socket.emit("get_item");
+            socket.on("get_item", res => {
+                document.querySelector("#item_list").innerHTML = "";
+                res.forEach(re => {
+                    document.querySelector("#item_list").insertAdjacentHTML("beforeend", `<div class='item'>${re.code} - <span clas='item_name'>${re.name}</span> (RM ${re.price}) [${re.qty}]</div>`)
+                })
+            })
+
+        })()
+    </script>
+</body>
+
+</html>
