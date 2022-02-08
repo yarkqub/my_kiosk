@@ -10,10 +10,10 @@ for now this project is open source, so you can see the code and contribute to i
 
 ## Instruction
 * Install the dependencies (use the command `npm install`)
-* Run the server (use the command `npm start`)
+* Run the server (use the command `npm run start`)
 * The kiosk will be running on port 3000
 * You can setup the Kiosk by going to the 'localhost:3000/admin.html' and use password `123`
-* You can change the password in file 'app.js'
+* You can change the password and port in file 'app.js'
 
 ## Extra info
 * You can use the command `npm run build` to build the project for production
