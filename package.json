@@ -4,8 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app --ignore *.json",
-    "start1": "electron .",
+    "start": "electron .",
     "build": "electron-builder --win"
   },
   "author": "yarkqub",
