@@ -7,14 +7,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiosk Admin</title>
     <script src="/socket.io/socket.io.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #password {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 12px 20px;
+            margin: 10px 5px;
+        }
+
+        #submit_password {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #submit_password:hover {
+            background-color: #45a049;
+        }
+
+        /* boostrap danger alert */
+        .alert {
+            padding: 20px;
+            background-color: #f44336;
+            color: white;
+            opacity: 1;
+            transition: opacity 0.6s;
+            margin-bottom: 15px;
+        }
+
+        /* boostrap green button */
+        .btn-success {
+            background-color: #5cb85c;
+            border-color: #4cae4c;
+            color: #fff;
+        }
+        
+        /* boostrap blue button */
+        .btn-primary {
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            color: #fff;
+        }
+
+        #list_item {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-gap: 10px;
+            margin: 10px;
+        }
+
+        .item_btn {
+            background-color: #337ab7;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
     Admin Panel
     <div id="password_container">
-        <div id="error_message"></div>
-        <input type="password" name="password" id="password">
-        <input type="button" id="submit_password" value="submit">
+        <div class="alert" id="error_message"></div>
+        <input type="password" name="password" id="password" placeholder="Password">
+        <input class="btn-success" type="button" id="submit_password" value="submit">
     </div>
     <div id="panel"></div>
     <script>
@@ -24,16 +92,19 @@
             const submit_password = document.querySelector("#submit_password")
             const password = document.querySelector("#password")
             const error_message = document.querySelector("#error_message")
-            
+            error_message.style.display = "none"
+
             socket.on("get_item", res => {
                 list_item.innerHTML = "";
                 res.forEach(re => {
-                    document.querySelector("#list_item").insertAdjacentHTML("beforeend", `${re.code} - ${re.name} (RM ${re.price}) [${re.qty}]<br>`)
+                    document.querySelector("#list_item").insertAdjacentHTML("beforeend", `<div class='item_btn'>${re.code} - ${re.name} (RM ${re.price}) [${re.qty}]</div>`)
                 })
             })
 
             socket.on("admin", res => {
                 if (!res) {
+                    error_message.style.display = "block"
+                    error_message.innerHTML = "Wrong password"
                     pass()
                 }
                 else {
@@ -57,7 +128,7 @@
             submit_password.addEventListener("click", () => {
                 socket.emit("admin", password.value)
                 password_container.style.display = "none"
-                error_message.innerHTML = "Wrong password"
+
             })
 
             function pass() {
