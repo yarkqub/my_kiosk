@@ -11,11 +11,20 @@
 
 <body>
     Admin Panel
+    <div id="password_container">
+        <div id="error_message"></div>
+        <input type="password" name="password" id="password">
+        <input type="button" id="submit_password" value="submit">
+    </div>
     <div id="panel"></div>
     <script>
         (() => {
             let socket = io();
-
+            const password_container = document.querySelector("#password_container")
+            const submit_password = document.querySelector("#submit_password")
+            const password = document.querySelector("#password")
+            const error_message = document.querySelector("#error_message")
+            
             socket.on("get_item", res => {
                 list_item.innerHTML = "";
                 res.forEach(re => {
@@ -45,10 +54,15 @@
             })
 
             pass()
-            function pass() {
-                let password = prompt("Password")
-                socket.emit("admin", password)
+            submit_password.addEventListener("click", () => {
+                socket.emit("admin", password.value)
+                password_container.style.display = "none"
+                error_message.innerHTML = "Wrong password"
+            })
 
+            function pass() {
+                ///let password = prompt("Password")
+                password_container.style.display = "block"
             }
 
             click("#item_list", e => {

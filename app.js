@@ -104,7 +104,7 @@ const createWindow = () => {
         autoHideMenuBar: true
     });
     win.removeMenu();
-    win.loadURL(`http://127.0.0.1:${port}`);
+    win.loadURL(`http://127.0.0.1:${port}/app.html`);
 }
 electron.app.whenReady().then(createWindow);
 
