@@ -51,12 +51,20 @@
             border-color: #4cae4c;
             color: #fff;
         }
-        
+
         /* boostrap blue button */
         .btn-primary {
             background-color: #337ab7;
             border-color: #2e6da4;
             color: #fff;
+        }
+
+        .btn {
+            border: none;
+            outline: none;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-radius: 4px;
         }
 
         #list_item {
@@ -73,6 +81,25 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+        }
+
+        .grid_area {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(100px, 1fr));
+            grid-gap: 10px;
+            margin: 10px;
+        }
+
+        .grid_item1{
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .grid_item2{
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -97,7 +124,7 @@
             socket.on("get_item", res => {
                 list_item.innerHTML = "";
                 res.forEach(re => {
-                    document.querySelector("#list_item").insertAdjacentHTML("beforeend", `<div class='item_btn'>${re.code} - ${re.name} (RM ${re.price}) [${re.qty}]</div>`)
+                    document.querySelector("#list_item").insertAdjacentHTML("beforeend", `<div class='item_btn' data-id='${re.code}'>${re.code} - ${re.name} (RM ${re.price}) [${re.qty}]</div>`)
                 })
             })
 
@@ -109,13 +136,21 @@
                 }
                 else {
                     panel.innerHTML = `Welcome!<hr>
-                    <h3>Add item</h3>
-                    <div id='add_error'></div>
-                    Code: <input type='text' id='add_code'><br>
-                    Name: <input type='text' id='add_name'><br>
-                    Price: <input type='number' step='0.01' id='add_price'><br>
-                    Qty: <input type='number' id='add_qty' min='0' value='1'><br>
-                    <button id='add_item'>Add</button>
+                    <div class="grid_area">
+                        <div class="grid_item1">
+                            <h3>Add item</h3>
+                            <div id='add_error'></div>
+                            Code: <input type='text' id='add_code'><br>
+                            Name: <input type='text' id='add_name'><br>
+                            Price: <input type='number' step='0.01' id='add_price'><br>
+                            Qty: <input type='number' id='add_qty' min='0' value='1'><br>
+                            <button class='btn btn-primary' id='add_item'>Add</button>
+                        </div>
+                        <div class="grid_item2">
+                            <h3>Selected item</h3>
+                            <div id='selected_item'></div>
+                        </div>
+                    </div>
                     <hr>
                     <button id='item_list'>Item List</button>
                     <div id='list_item'></div>
@@ -135,6 +170,10 @@
                 ///let password = prompt("Password")
                 password_container.style.display = "block"
             }
+
+            click("#item_btn", e => {
+
+            })
 
             click("#item_list", e => {
                 list_item.innerHTML = `Loading item...`
