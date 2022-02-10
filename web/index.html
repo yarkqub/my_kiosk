@@ -140,6 +140,24 @@
             background: black;
             border-radius: 10px;
         }
+
+        .kbd {
+            border: 1px solid black;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .kbd:hover {
+            box-shadow: inset black 1px 1px 2px;
+        }
+
+        .kbd:active {
+            box-shadow: inset black 2px 2px 2px;
+        }
+
+        .span2 {
+            grid-column: span 2;
+        }
     </style>
 </head>
 
@@ -160,15 +178,18 @@
             <button class="kbd" data-id="7">7</button>
             <button class="kbd" data-id="8">8</button>
             <button class="kbd" data-id="9">9</button>
-            <button class="kbd" data-id="*">*</button>
+            <button class="kbd" data-id="delete">&#9003;</button>
             <button class="kbd" data-id="4">4</button>
             <button class="kbd" data-id="5">5</button>
             <button class="kbd" data-id="6">6</button>
-            <button class="kbd" data-id="#">#</button>
+            <button class="kbd" data-id="clear">&times;</button>
             <button class="kbd" data-id="1">1</button>
             <button class="kbd" data-id="2">2</button>
             <button class="kbd" data-id="3">3</button>
             <button class="kbd" data-id="0">0</button>
+            <button class="kbd" data-id="*">*</button>
+            <button class="kbd" data-id="#">#</button>
+            <button class="kbd span2" data-id="enter">✔</button>
         </div>
 
     </div>
@@ -220,6 +241,40 @@
             carts = data.items
             order_status = data.status
             update_carts()
+        })
+
+        click(".kbd", () => {
+            let id = event.target.dataset.id
+            if (id == "clear") {
+                code.value = ""
+            } else if (id == "delete") {
+                code.value = code.value.slice(0, -1)
+            } else if (id == "enter") {
+                if (code.value.length > 0) {
+                    let code_ = code.value.split("*")
+                    if (!code_[1]) {
+                        code_[1] = 1
+                    }
+                    let check_item = items_data.some(item_data => item_data.code == code_[0])
+                    if (check_item) {
+                        let check_cart = carts.some(item_cart => item_cart.code == code_[0])
+                        if (!check_cart) {
+                            let make_cart = items_data.find(item_data => item_data.code == code_[0])
+                            make_cart.cart_qty = code_[1]
+                            carts.push(make_cart)
+                        }
+                        else {
+                            let get_cart = carts.find(crt => crt.code == code_[0])
+                            get_cart.cart_qty = Number(get_cart.cart_qty) + Number(code_[1])
+                        }
+                        code.value = ""
+                        update_carts()
+                    }
+                }
+            } else {
+                code.value += id
+            }
+
         })
 
         click("#do_new", () => {
