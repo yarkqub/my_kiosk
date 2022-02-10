@@ -119,9 +119,12 @@
             const submit_password = document.querySelector("#submit_password")
             const password = document.querySelector("#password")
             const error_message = document.querySelector("#error_message")
+            
             error_message.style.display = "none"
+            let item_list = []
 
             socket.on("get_item", res => {
+                item_list = res
                 list_item.innerHTML = "";
                 res.forEach(re => {
                     document.querySelector("#list_item").insertAdjacentHTML("beforeend", `<div class='item_btn' data-id='${re.code}'>${re.code} - ${re.name} (RM ${re.price}) [${re.qty}]</div>`)
@@ -171,8 +174,11 @@
                 password_container.style.display = "block"
             }
 
-            click("#item_btn", e => {
-
+            click(".item_btn", e => {
+                let id = e.getAttribute("data-id")
+                let this_item = item_list.find(item => item.code == id)
+                const selected_item = document.querySelector("#selected_item")
+                selected_item.innerHTML = `<div>${this_item.code} - ${this_item.name} (RM ${this_item.price}) [${this_item.qty}]</div>`
             })
 
             click("#item_list", e => {
