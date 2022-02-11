@@ -18,6 +18,14 @@ for now this project is open source, so you can see the code and contribute to i
 ## Extra info
 * You can use the command `npm run build` to build the project for production
 
+## To do
+* Add subcategory to the products
+* Fix the bug the product quantity when product is added to the cart
+* Disable products that are out of stock
+* Generate sales report
+
+## License
+This project is licensed under the MIT license.
 
 
 Credits to:
