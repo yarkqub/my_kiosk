@@ -90,13 +90,13 @@
             margin: 10px;
         }
 
-        .grid_item1{
+        .grid_item1 {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
 
-        .grid_item2{
+        .grid_item2 {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -119,16 +119,14 @@
             const submit_password = document.querySelector("#submit_password")
             const password = document.querySelector("#password")
             const error_message = document.querySelector("#error_message")
-            
+
             error_message.style.display = "none"
             let item_list = []
+            let item_selected = 0
 
             socket.on("get_item", res => {
                 item_list = res
-                list_item.innerHTML = "";
-                res.forEach(re => {
-                    document.querySelector("#list_item").insertAdjacentHTML("beforeend", `<div class='item_btn' data-id='${re.code}'>${re.code} - ${re.name} (RM ${re.price}) [${re.qty}]</div>`)
-                })
+                display_item_list()
             })
 
             socket.on("admin", res => {
@@ -176,9 +174,26 @@
 
             click(".item_btn", e => {
                 let id = e.getAttribute("data-id")
+                item_selected = id
                 let this_item = item_list.find(item => item.code == id)
                 const selected_item = document.querySelector("#selected_item")
-                selected_item.innerHTML = `<div>${this_item.code} - ${this_item.name} (RM ${this_item.price}) [${this_item.qty}]</div>`
+                selected_item.innerHTML = `<div>${this_item.code} - ${this_item.name} (RM ${this_item.price}) [${this_item.qty}] <hr><button id="close_item" class='btn'>&times;</button></div>`
+                list_item.innerHTML = ""
+                if (this_item.sub_item.length > 0) {
+                    console.log("item more than 1")
+                    this_item.sub_item.forEach(sub => {
+                        list_item.insertAdjacentHTML("beforeend", `<div class='item_btn' data-id='${sub.code}'>${sub.code} - ${sub.name} (RM ${sub.price}) [${sub.qty}]</div>`)
+                    })
+                }
+                else {
+                    list_item.innerHTML = "No sub item"
+                }
+            })
+
+            click("#close_item", ()=>{
+                item_selected = 0
+                display_item_list()
+                selected_item.innerHTML = ""
             })
 
             click("#item_list", e => {
@@ -189,10 +204,12 @@
             click("#add_item", e => {
                 if (add_code.value && add_name.value && add_price.value && add_qty.value) {
                     socket.emit("add_item", {
+                        "selected": item_selected,
                         "code": add_code.value,
                         "name": add_name.value,
                         "price": add_price.value,
-                        "qty": add_qty.value
+                        "qty": add_qty.value,
+                        "sub_item": []
                     })
                     add_code.value = add_name.value = add_price.value = add_qty.value = ""
                 }
@@ -201,14 +218,20 @@
                 }
             })
 
+            function display_item_list() {
+                list_item.innerHTML = ""
+                item_list.forEach(item => {
+                    list_item.insertAdjacentHTML("beforeend", `<div class='item_btn' data-id='${item.code}'>${item.code} - ${item.name} (RM ${item.price}) [${item.qty}]</div>`)
+                })
+            }
 
 
+            function click(selector, callback) {
+                document.addEventListener("click", e => {
+                    if (e.target.matches(selector)) callback(e.target)
+                })
+            }
         })()
-        function click(selector, callback) {
-            document.addEventListener("click", e => {
-                if (e.target.matches(selector)) callback(e.target)
-            })
-        }
     </script>
 </body>
 

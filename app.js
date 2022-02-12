@@ -87,12 +87,26 @@ io.on('connection', (socket) => {
         let get_data = JSON.parse(fs.readFileSync('item.json'))
         let find1 = get_data.some(item => item.code == data.code)
         if (!find1) {
-            get_data.push(data)
-            let data_string = JSON.stringify(get_data)
-            fs.writeFileSync('item.json', data_string)
-            let get = JSON.parse(fs.readFileSync("item.json"))
-            items = get
-            io.emit("get_item", get)
+            let parent = data.selected
+            if (parent == 0) {
+                get_data.push(data)
+                let data_string = JSON.stringify(get_data)
+                fs.writeFileSync('item.json', data_string)
+                let get = JSON.parse(fs.readFileSync("item.json"))
+                items = get
+                io.emit("get_item", get)
+            }
+            else{
+                let find2 = get_data.find(item => item.code == parent)
+                console.log(find2)
+                find2.sub_item.push(data)
+                console.log(find2)
+                let data_string = JSON.stringify(get_data)
+                fs.writeFileSync('item.json', data_string)
+                let get = JSON.parse(fs.readFileSync("item.json"))
+                items = get
+                io.emit("get_item", get)
+            }
         }
     })
 });

@@ -19,7 +19,10 @@ for now this project is open source, so you can see the code and contribute to i
 * You can use the command `npm run build` to build the project for production
 
 ## To do
-* Add subcategory to the products
+✅ Add subcategory to the products
+* Edit selected product
+* Delete the subcategory from the products
+* Fix cashier select item that have subcategory
 * Fix the bug the product quantity when product is added to the cart
 * Disable products that are out of stock
 * Generate sales report
