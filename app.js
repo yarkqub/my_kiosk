@@ -83,11 +83,23 @@ io.on('connection', (socket) => {
         fs.writeFileSync('order.json', data_string)
     })
 
+    socket.on("delete_item", data => {
+        let get = JSON.parse(fs.readFileSync('item.json'))
+        get.forEach(element => {
+            if (element.code == data) {
+                get.splice(get.indexOf(element), 1)
+            }
+        })
+        let data_string = JSON.stringify(get)
+        fs.writeFileSync('item.json', data_string)
+        io.emit("get_item", new_data)
+    })
+
     socket.on("add_item", data => {
         let get_data = JSON.parse(fs.readFileSync('item.json'))
         let find1 = get_data.some(item => item.code == data.code)
         if (!find1) {
-            let parent = data.selected
+            let parent = data.selected.length
             if (parent == 0) {
                 get_data.push(data)
                 let data_string = JSON.stringify(get_data)
@@ -96,11 +108,14 @@ io.on('connection', (socket) => {
                 items = get
                 io.emit("get_item", get)
             }
-            else{
-                let find2 = get_data.find(item => item.code == parent)
-                console.log(find2)
-                find2.sub_item.push(data)
-                console.log(find2)
+            else {
+                let find2 = get_data.find(item => item.code == data.selected[0]).sub_item
+                if(data.selected.length > 1){
+                    for(let i = 1; i < data.selected.length; i++){
+                        find2 = find2.find(item => item.code == data.selected[i]).sub_item
+                    }
+                }
+                find2.push(data)
                 let data_string = JSON.stringify(get_data)
                 fs.writeFileSync('item.json', data_string)
                 let get = JSON.parse(fs.readFileSync("item.json"))

@@ -120,9 +120,10 @@
             const password = document.querySelector("#password")
             const error_message = document.querySelector("#error_message")
 
+
             error_message.style.display = "none"
             let item_list = []
-            let item_selected = 0
+            let item_selected = []
 
             socket.on("get_item", res => {
                 item_list = res
@@ -174,24 +175,47 @@
 
             click(".item_btn", e => {
                 let id = e.getAttribute("data-id")
-                item_selected = id
-                let this_item = item_list.find(item => item.code == id)
                 const selected_item = document.querySelector("#selected_item")
-                selected_item.innerHTML = `<div>${this_item.code} - ${this_item.name} (RM ${this_item.price}) [${this_item.qty}] <hr><button id="close_item" class='btn'>&times;</button></div>`
-                list_item.innerHTML = ""
-                if (this_item.sub_item.length > 0) {
-                    console.log("item more than 1")
-                    this_item.sub_item.forEach(sub => {
-                        list_item.insertAdjacentHTML("beforeend", `<div class='item_btn' data-id='${sub.code}'>${sub.code} - ${sub.name} (RM ${sub.price}) [${sub.qty}]</div>`)
-                    })
+                if (item_selected.length == 0) {
+                    item_selected.push(id)
+                    let this_item = item_list.find(item => item.code == id)
+                    selected_item.innerHTML = `<div>${this_item.code} - ${this_item.name} (RM ${this_item.price}) [${this_item.qty}] <hr><button id="close_item" class='btn'>&times;</button><button class="btn delete_item" data-id='${this_item.code}'>🚮</button></div>`
+                    list_item.innerHTML = ""
+                    if (this_item.sub_item.length > 0) {
+                        console.log("item more than 1")
+                        this_item.sub_item.forEach(sub => {
+                            list_item.insertAdjacentHTML("beforeend", `<div class='item_btn' data-id='${sub.code}'>${sub.code} - ${sub.name} (RM ${sub.price}) [${sub.qty}]</div>`)
+                        })
+                    }
+                    else {
+                        list_item.innerHTML = "No sub item"
+                    }
                 }
                 else {
-                    list_item.innerHTML = "No sub item"
+                    //get sub_item 
+                    for (i = 0; i < item_selected.length; i++) {
+                        console.log(item_selected[i])
+                        let get_sub_item = item_list.find(item => item.code == item_selected[i]).sub_item
+                        console.log(get_sub_item)
+                        if (i == item_selected.length - 1) {
+                            let this_item = get_sub_item.find(item_1 => item_1.code == id)
+                            console.log(this_item)
+                            selected_item.innerHTML = `<div>${this_item.code} - ${this_item.name} (RM ${this_item.price}) [${this_item.qty}] <hr><button id="close_item" class='btn'>&times;</button><button class="btn delete_item" data-id='${this_item.code}'>🚮</button></div>`
+                            list_item.innerHTML = "Item test 1"
+                        }
+                        
+                    }
+                    item_selected.push(id)
                 }
             })
 
-            click("#close_item", ()=>{
-                item_selected = 0
+            click(".delete_item", e => {
+                let id = e.getAttribute("data-id")
+                socket.emit("delete_item", id)
+            })
+
+            click("#close_item", () => {
+                item_selected = []
                 display_item_list()
                 selected_item.innerHTML = ""
             })
