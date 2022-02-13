@@ -176,36 +176,20 @@
             click(".item_btn", e => {
                 let id = e.getAttribute("data-id")
                 const selected_item = document.querySelector("#selected_item")
-                if (item_selected.length == 0) {
-                    item_selected.push(id)
-                    let this_item = item_list.find(item => item.code == id)
-                    selected_item.innerHTML = `<div>${this_item.code} - ${this_item.name} (RM ${this_item.price}) [${this_item.qty}] <hr><button id="close_item" class='btn'>&times;</button><button class="btn delete_item" data-id='${this_item.code}'>🚮</button></div>`
-                    list_item.innerHTML = ""
-                    if (this_item.sub_item.length > 0) {
-                        console.log("item more than 1")
-                        this_item.sub_item.forEach(sub => {
-                            list_item.insertAdjacentHTML("beforeend", `<div class='item_btn' data-id='${sub.code}'>${sub.code} - ${sub.name} (RM ${sub.price}) [${sub.qty}]</div>`)
-                        })
-                    }
-                    else {
-                        list_item.innerHTML = "No sub item"
+                item_selected.push(id)
+                let getsubitem1_temp = item_list.find(item => item.code == item_selected[0])
+                selected_item.innerHTML = `<div>${getsubitem1_temp.code} - ${getsubitem1_temp.name} (RM ${getsubitem1_temp.price}) [${getsubitem1_temp.qty}] <hr><button id="close_item" class='btn'>&times;</button><button class="btn delete_item" data-id='${getsubitem1_temp.code}'>🚮</button></div>`
+                let getsubitem1 = getsubitem1_temp.sub_item
+                if (item_selected.length > 1) {
+                    for (let i = 1; i < item_selected.length; i++) {
+                        getsubitem1_temp = getsubitem1.find(sub => sub.code == item_selected[i])
+                        getsubitem1 = getsubitem1_temp.sub_item
+                        selected_item.innerHTML = `<div>${item_selected[i]} - ${getsubitem1_temp.name} (RM ${getsubitem1_temp.price}) [${getsubitem1_temp.qty}] <hr><button id="close_item" class='btn'>&times;</button><button class="btn delete_item" data-id='${getsubitem1_temp.code}'>🚮</button></div>`
                     }
                 }
-                else {
-                    //get sub_item 
-                    item_selected.push(id)
-                    let getsubitem1 = item_list.find(item => item.code == item_selected[0]).sub_item
-                    if (item_selected.length > 1) {
-                        for (let i = 1; i < item_selected.length; i++) {
-                            getsubitem1_temp = getsubitem1.find(sub => sub.code == item_selected[i])
-                            getsubitem1 = getsubitem1_temp.sub_item
-                            selected_item.innerHTML = `<div>${item_selected[i]} - ${getsubitem1_temp.name} (RM ${getsubitem1_temp.price}) [${getsubitem1_temp.qty}] <hr><button id="close_item" class='btn'>&times;</button><button class="btn delete_item" data-id='${getsubitem1_temp.code}'>🚮</button></div>`
-                        }
-                    }
+                list_item.innerHTML = "No sub item found"
+                if (getsubitem1.length > 0) {
                     list_item.innerHTML = ""
-                    if (getsubitem1.length < 1) {
-                        list_item.innerHTML = "No sub item found"
-                    }
                     getsubitem1.forEach(sub => {
                         list_item.insertAdjacentHTML("beforeend", `<div class='item_btn' data-id='${sub.code}'>${sub.code} - ${sub.name} (RM ${sub.price}) [${sub.qty}]</div>`)
                     })
