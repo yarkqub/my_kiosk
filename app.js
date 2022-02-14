@@ -97,25 +97,42 @@ io.on('connection', (socket) => {
 
     socket.on("add_item", data => {
         let get_data = JSON.parse(fs.readFileSync('item.json'))
-        let find1 = get_data.some(item => item.code == data.code)
-        if (!find1) {
-            let parent = data.selected.length
-            if (parent == 0) {
-                get_data.push(data)
-                let data_string = JSON.stringify(get_data)
-                fs.writeFileSync('item.json', data_string)
-                let get = JSON.parse(fs.readFileSync("item.json"))
-                items = get
-                io.emit("get_item", get)
-            }
-            else {
-                let find2 = get_data.find(item => item.code == data.selected[0]).sub_item
-                if(data.selected.length > 1){
-                    for(let i = 1; i < data.selected.length; i++){
-                        find2 = find2.find(item => item.code == data.selected[i]).sub_item
+        let parent = data.selected
+        if (parent.length > 0) {
+            let subitem = get_data
+            for (let i = 0; i < parent.length; i++) {
+                subitem = subitem.find(item => item.code == parent[i])
+                if (i == parent.length - 1) {
+                    if (subitem.sub_item.length > 0) {
+                        let check = subitem.sub_item.some(item => item.code == data.code)
+                        if (check) {
+                            socket.emit("error_msg", "Code already exist")
+                        }
+                        else {
+                            subitem.sub_item.push(data)
+                            let data_string = JSON.stringify(get_data)
+                            fs.writeFileSync('item.json', data_string)
+                            io.emit("get_item", get_data)
+                        }
+                    }
+                    else {
+                        subitem.sub_item.push(data)
+                        let data_string = JSON.stringify(get_data)
+                        fs.writeFileSync('item.json', data_string)
+                        io.emit("get_item", get_data)
                     }
                 }
-                find2.push(data)
+                else {
+                    if (subitem.sub_item.length) {
+                        subitem = subitem.sub_item
+                    }
+                }
+            }
+        }
+        else {
+            let find1 = get_data.some(item => item.code == data.code)
+            if (!find1) {
+                get_data.push(data)
                 let data_string = JSON.stringify(get_data)
                 fs.writeFileSync('item.json', data_string)
                 let get = JSON.parse(fs.readFileSync("item.json"))

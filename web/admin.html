@@ -130,6 +130,10 @@
                 display_item_list()
             })
 
+            socket.on("error_msg", data => {
+                alert(data)
+            })
+
             socket.on("admin", res => {
                 if (!res) {
                     error_message.style.display = "block"
@@ -198,7 +202,7 @@
 
             click(".delete_item", e => {
                 let id = e.getAttribute("data-id")
-                socket.emit("delete_item", id)
+                socket.emit("delete_item", { id: id, selected: item_selected })
             })
 
             click("#close_item", () => {
@@ -224,6 +228,7 @@
                     })
                     selected_item.innerHTML = add_code.value = add_name.value = add_price.value = add_qty.value = ""
                     item_selected = []
+                    display_item_list()
                 }
                 else {
                     add_error.innerHTML = `Please fill all form!`
