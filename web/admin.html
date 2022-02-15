@@ -203,6 +203,8 @@
             click(".delete_item", e => {
                 let id = e.getAttribute("data-id")
                 socket.emit("delete_item", { id: id, selected: item_selected })
+                item_selected = []
+                display_item_list()
             })
 
             click("#close_item", () => {

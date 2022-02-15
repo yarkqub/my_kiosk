@@ -85,14 +85,35 @@ io.on('connection', (socket) => {
 
     socket.on("delete_item", data => {
         let get = JSON.parse(fs.readFileSync('item.json'))
-        get.forEach(element => {
-            if (element.code == data) {
-                get.splice(get.indexOf(element), 1)
+        let get_item = get
+        let prev_item = get
+        for (let i = 0; i < data.selected.length; i++) {
+            get_item = get_item.find(item => item.code == data.selected[i])
+            if (i == data.selected.length - 1) {
+                if (data.selected.length > 1) {
+                    let del_item = prev_item.sub_item
+                    del_item.forEach(el => {
+                        if (el.code == data.id) {
+                            del_item.splice(del_item.indexOf(el), 1)
+                        }
+                    })
+                }
+                else {
+                    get.forEach(el => {
+                        if (el.code == data.id) {
+                            get.splice(get.indexOf(el), 1)
+                        }
+                    })
+                }
             }
-        })
+            else {
+                prev_item = get_item
+                get_item = get_item.sub_item
+            }
+        }
         let data_string = JSON.stringify(get)
         fs.writeFileSync('item.json', data_string)
-        io.emit("get_item", new_data)
+        io.emit("get_item", get)
     })
 
     socket.on("add_item", data => {
@@ -103,7 +124,7 @@ io.on('connection', (socket) => {
             for (let i = 0; i < parent.length; i++) {
                 subitem = subitem.find(item => item.code == parent[i])
                 if (i == parent.length - 1) {
-                    if (subitem.sub_item.length > 0) {
+                    if (subitem.sub_item.length) {
                         let check = subitem.sub_item.some(item => item.code == data.code)
                         if (check) {
                             socket.emit("error_msg", "Code already exist")
