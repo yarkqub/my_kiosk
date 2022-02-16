@@ -20,8 +20,8 @@ for now this project is open source, so you can see the code and contribute to i
 
 ## To do
 ✅ Add subcategory to the products
+✅ Delete the subcategory from the products
 * Edit selected product
-* Delete the subcategory from the products
 * Fix cashier select item that have subcategory
 * Fix the bug the product quantity when product is added to the cart
 * Disable products that are out of stock

@@ -207,6 +207,7 @@
                     socket.emit("delete_item", { id: id, selected: item_selected })
                     item_selected = []
                     display_item_list()
+                    selected_item.innerHTML = ""
                 }
             })
 
