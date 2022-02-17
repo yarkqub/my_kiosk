@@ -206,6 +206,7 @@
         const recipt_items = document.querySelector("#recipt_items")
         const history = document.querySelector("#history")
         const code = document.querySelector("#code")
+        let cur_sub_item = []
 
         setTimeout(() => { ready() }, 1000)
         function ready() {
@@ -364,16 +365,39 @@
 
         click(".items", data => {
             let selected_menu = data.getAttribute("data-id")
-            let in_cart = carts.some(crt => crt.code == selected_menu) //check item dalam list ke belum
-            //check slected item punya qty >= 1 mean ok, pastu tolak 1 qty dia, pastu update display. nk tido jap, nnti buat
-            if (!in_cart) {
-                let selected_item = items_data.find(itda => itda.code == selected_menu)
-                selected_item.cart_qty = 1
-                carts.push(selected_item)
+            if (!cur_sub_item.length) {
+                let selected_item = items_data.find(item => item.code == selected_menu)
+                cur_sub_item = selected_item.sub_item
+                item_list.innerHTML = ""
+                if (cur_sub_item.length > 0) {
+                    cur_sub_item.forEach(element => {
+                        item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
+                    })
+                }
+                else {
+                    item_list.innerHTML = "TEST001"
+                }
             }
             else {
-                let selected_cart = carts.find(crt => crt.code == selected_menu)
-                selected_cart.cart_qty++
+                let sub_list = cur_sub_item[0].selected
+                let the_item = items_data
+                for (let i = 0; i < sub_list.length; i++) {
+                    the_item = the_item.find(item => item.code == sub_list[i])
+                    if(i != sub_list.length - 1){
+                        the_item = the_item.sub_item
+                    }
+                }
+                the_item = the_item.sub_item.find(el => el.code == selected_menu)
+                cur_sub_item = the_item.sub_item
+                item_list.innerHTML = ""
+                if (cur_sub_item.length > 0) {
+                    cur_sub_item.forEach(element => {
+                        item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
+                    })
+                }
+                else {
+                    item_list.innerHTML = "TEST002"
+                }
             }
             update_carts()
         })
