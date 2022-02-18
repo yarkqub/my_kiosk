@@ -382,7 +382,19 @@
                     })
                 }
                 else {
-                    item_list.innerHTML = "TEST001"
+                    let check_cart = carts.some(item_cart => item_cart.code == selected_item.code && item_cart.selected == item_cart.selected)
+                    if (!check_cart) {
+                        let make_cart = selected_item
+                        make_cart.cart_qty = 1
+                        make_cart.selected = selected_item.selected
+                        carts.push(make_cart)
+                    }
+                    else {
+                        let get_cart = carts.find(crt => crt.code == selected_item.code)
+                        get_cart.cart_qty = Number(get_cart.cart_qty) + 1
+                        get_cart.selected = selected_item.selected
+                    }
+                    reset_items()
                 }
             }
             else {
@@ -403,8 +415,6 @@
                     })
                 }
                 else {
-                    item_list.innerHTML = "TEST002"
-                    console.log(the_item)
                     let check_cart = carts.some(item_cart => item_cart.code == the_item.code && item_cart.selected == item_cart.selected)
                     if (!check_cart) {
                         let make_cart = the_item
