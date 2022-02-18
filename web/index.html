@@ -300,6 +300,13 @@
             recipt_items.insertAdjacentHTML("beforeend", `<br>RM ${total.toFixed(2)}`)
         }
 
+        function reset_items() {
+            item_list.innerHTML = ""
+            items_data.forEach(element => {
+                item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
+            });
+        }
+
         code.addEventListener("keyup", data => {
             if (data.which == 13) {
                 let code_ = code.value.split("*")
@@ -383,7 +390,7 @@
                 let the_item = items_data
                 for (let i = 0; i < sub_list.length; i++) {
                     the_item = the_item.find(item => item.code == sub_list[i])
-                    if(i != sub_list.length - 1){
+                    if (i != sub_list.length - 1) {
                         the_item = the_item.sub_item
                     }
                 }
@@ -397,6 +404,20 @@
                 }
                 else {
                     item_list.innerHTML = "TEST002"
+                    console.log(the_item)
+                    let check_cart = carts.some(item_cart => item_cart.code == the_item.code && item_cart.selected == item_cart.selected)
+                    if (!check_cart) {
+                        let make_cart = the_item
+                        make_cart.cart_qty = 1
+                        make_cart.selected = the_item.selected
+                        carts.push(make_cart)
+                    }
+                    else {
+                        let get_cart = carts.find(crt => crt.code == the_item.code)
+                        get_cart.cart_qty = Number(get_cart.cart_qty) + 1
+                        get_cart.selected = the_item.selected
+                    }
+                    reset_items()
                 }
             }
             update_carts()
