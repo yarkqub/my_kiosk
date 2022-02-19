@@ -101,6 +101,10 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
+        #panel_edit_item {
+            display: none;
+        }
     </style>
 </head>
 
@@ -144,13 +148,25 @@
                     panel.innerHTML = `Welcome!<hr>
                     <div class="grid_area">
                         <div class="grid_item1">
-                            <h3>Add item</h3>
-                            <div id='add_error'></div>
-                            Code: <input type='text' id='add_code'><br>
-                            Name: <input type='text' id='add_name'><br>
-                            Price: <input type='number' step='0.01' id='add_price'><br>
-                            Qty: <input type='number' id='add_qty' min='0' value='1'><br>
-                            <button class='btn btn-primary' id='add_item'>Add</button>
+                            <div id="panel_add_item">
+                                <h3>Add item</h3>
+                                <div id='add_error'></div>
+                                Code: <input type='text' id='add_code'><br>
+                                Name: <input type='text' id='add_name'><br>
+                                Price: <input type='number' step='0.01' id='add_price'><br>
+                                Qty: <input type='number' id='add_qty' min='0' value='1'><br>
+                                <button class='btn btn-primary' id='add_item'>Add</button>
+                            </div>
+                            <div id="panel_edit_item">
+                                <h3>Edit item</h3>
+                                <div id='edit_error'></div>
+                                Code: <input type='text' id='edit_code'><br>
+                                Name: <input type='text' id='edit_name'><br>
+                                Price: <input type='number' step='0.01' id='edit_price'><br>
+                                Qty: <input type='number' id='edit_qty' min='0' value='1'><br>
+                                <button class='btn btn-primary' id='save_item'>Save</button>
+                                <button class='btn btn-primary' id='cancel_edit'>Cancel</button>
+                            </div>
                         </div>
                         <div class="grid_item2">
                             <h3>Selected item</h3>
@@ -182,13 +198,13 @@
                 const selected_item = document.querySelector("#selected_item")
                 item_selected.push(id)
                 let getsubitem1_temp = item_list.find(item => item.code == item_selected[0])
-                selected_item.innerHTML = `<div>${getsubitem1_temp.code} - ${getsubitem1_temp.name} (RM ${getsubitem1_temp.price}) [${getsubitem1_temp.qty}] <hr><button id="close_item" class='btn'>&times;</button><button class="btn delete_item" data-id='${getsubitem1_temp.code}'>🚮</button></div>`
+                selected_item.innerHTML = `<div>${getsubitem1_temp.code} - ${getsubitem1_temp.name} (RM ${getsubitem1_temp.price}) [${getsubitem1_temp.qty}] <hr><button id="close_item" class='btn'>❌</button> <button class="btn delete_item" data-id='${getsubitem1_temp.code}'>🚮</button> <button class='btn edit_item' data-id='${getsubitem1_temp.code}'>🖊</button></div>`
                 let getsubitem1 = getsubitem1_temp.sub_item
                 if (item_selected.length > 1) {
                     for (let i = 1; i < item_selected.length; i++) {
                         getsubitem1_temp = getsubitem1.find(sub => sub.code == item_selected[i])
                         getsubitem1 = getsubitem1_temp.sub_item
-                        selected_item.innerHTML = `<div>${item_selected[i]} - ${getsubitem1_temp.name} (RM ${getsubitem1_temp.price}) [${getsubitem1_temp.qty}] <hr><button id="close_item" class='btn'>&times;</button><button class="btn delete_item" data-id='${getsubitem1_temp.code}'>🚮</button></div>`
+                        selected_item.innerHTML = `<div>${item_selected[i]} - ${getsubitem1_temp.name} (RM ${getsubitem1_temp.price}) [${getsubitem1_temp.qty}] <hr><button id="close_item" class='btn'>❌</button> <button class="btn delete_item" data-id='${getsubitem1_temp.code}'>🚮</button> <button class='btn edit_item' data-id='${getsubitem1_temp.code}'>🖊</button></div>`
                     }
                 }
                 list_item.innerHTML = "No sub item found"
@@ -198,6 +214,33 @@
                         list_item.insertAdjacentHTML("beforeend", `<div class='item_btn' data-id='${sub.code}'>${sub.code} - ${sub.name} (RM ${sub.price}) [${sub.qty}]</div>`)
                     })
                 }
+            })
+
+            click(".edit_item", e => {
+                let id = e.getAttribute("data-id")
+                let item = item_list.find(item => item.code == id)
+                let the_item = item_list
+                for (let i = 0; i < item_selected.length; i++) {
+                    the_item = the_item.find(item => item.code == item_selected[i])
+                    if (i != item_selected.length - 1) {
+                        the_item = the_item.sub_item
+                    }
+                }
+                let edit_code = document.querySelector("#edit_code")
+                let edit_name = document.querySelector("#edit_name")
+                let edit_price = document.querySelector("#edit_price")
+                let edit_qty = document.querySelector("#edit_qty")
+                edit_code.value = the_item.code
+                edit_name.value = the_item.name
+                edit_price.value = the_item.price
+                edit_qty.value = the_item.qty
+                panel_edit_item.style.display = "block"
+                panel_add_item.style.display = "none"
+            })
+
+            click("#cancel_edit", () => {
+                panel_edit_item.style.display = "none"
+                panel_add_item.style.display = "block"
             })
 
             click(".delete_item", e => {
