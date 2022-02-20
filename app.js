@@ -116,6 +116,27 @@ io.on('connection', (socket) => {
         io.emit("get_item", get)
     })
 
+    socket.on("save_item", data=>{
+        let get_data = JSON.parse(fs.readFileSync('item.json'))
+        let selected = data.edit_selected
+        let the_item = get_data
+        for (let i = 0; i < selected.length; i++) {
+            the_item = the_item.find(item => item.code == selected[i])
+            if (i == selected.length - 1) {
+                the_item.code = data.code
+                the_item.name = data.name
+                the_item.price = data.price
+                the_item.qty = data.qty
+            }
+            else {
+                the_item = the_item.sub_item
+            }
+        }
+        let data_string = JSON.stringify(get_data)
+        fs.writeFileSync('item.json', data_string)
+        io.emit("get_item", get_data)
+    })
+
     socket.on("add_item", data => {
         let get_data = JSON.parse(fs.readFileSync('item.json'))
         let parent = data.selected

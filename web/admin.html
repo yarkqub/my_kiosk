@@ -128,6 +128,7 @@
             error_message.style.display = "none"
             let item_list = []
             let item_selected = []
+            let edit_selected = []
 
             socket.on("get_item", res => {
                 item_list = res
@@ -218,24 +219,48 @@
 
             click(".edit_item", e => {
                 let id = e.getAttribute("data-id")
-                let item = item_list.find(item => item.code == id)
-                let the_item = item_list
+                let item = item_list
+                edit_selected = item_selected
                 for (let i = 0; i < item_selected.length; i++) {
-                    the_item = the_item.find(item => item.code == item_selected[i])
+                    item = item.find(item => item.code == item_selected[i])
                     if (i != item_selected.length - 1) {
-                        the_item = the_item.sub_item
+                        item = item.sub_item
                     }
                 }
                 let edit_code = document.querySelector("#edit_code")
                 let edit_name = document.querySelector("#edit_name")
                 let edit_price = document.querySelector("#edit_price")
                 let edit_qty = document.querySelector("#edit_qty")
-                edit_code.value = the_item.code
-                edit_name.value = the_item.name
-                edit_price.value = the_item.price
-                edit_qty.value = the_item.qty
+                edit_code.value = item.code
+                edit_name.value = item.name
+                edit_price.value = item.price
+                edit_qty.value = item.qty
                 panel_edit_item.style.display = "block"
                 panel_add_item.style.display = "none"
+            })
+
+            click("#save_item", ()=>{
+                let edit_code = document.querySelector("#edit_code")
+                let edit_name = document.querySelector("#edit_name")
+                let edit_price = document.querySelector("#edit_price")
+                let edit_qty = document.querySelector("#edit_qty")
+                let edit_error = document.querySelector("#edit_error")
+                if (edit_code.value == "" || edit_name.value == "" || edit_price.value == "" || edit_qty.value == "") {
+                    edit_error.innerHTML = "Please fill all the fields"
+                }
+                else {
+                    socket.emit("save_item", {
+                        code: edit_code.value,
+                        name: edit_name.value,
+                        price: edit_price.value,
+                        qty: edit_qty.value,
+                        edit_selected: edit_selected
+                    })
+                    panel_edit_item.style.display = "none"
+                    panel_add_item.style.display = "block"
+                }
+                selected_item.innerHTML = ""
+                item_selected = []
             })
 
             click("#cancel_edit", () => {
