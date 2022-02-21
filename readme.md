@@ -50,6 +50,10 @@ for now this project is open source, so you can see the code and contribute to i
 
 ✅ Edit selected product
 
+* Add back button at cashier
+
+* Fix bug after select and cancel product
+
 * Fix code finder for cashier
 
 * Fix the bug the product quantity when product is added to the cart
