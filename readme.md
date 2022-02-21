@@ -48,7 +48,7 @@ for now this project is open source, so you can see the code and contribute to i
 
 ✅ Fix cashier select item that have subcategory
 
-* Edit selected product
+✅ Edit selected product
 
 * Fix code finder for cashier
 
