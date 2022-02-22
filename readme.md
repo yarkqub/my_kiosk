@@ -46,13 +46,9 @@ for now this project is open source, so you can see the code and contribute to i
 
 ✅ Delete the subcategory from the products
 
-✅ Fix cashier select item that have subcategory
-
 ✅ Edit selected product
 
 * Add back button at cashier?
-
-* Fix bug select items in first layer subcategory
 
 * Fix code finder for cashier
 
@@ -61,6 +57,13 @@ for now this project is open source, so you can see the code and contribute to i
 * Disable products that are out of stock
 
 * Generate sales report
+
+## Bugs fixed
+
+✅ Fix cashier select item that have subcategory
+
+✅ Fix bug select items in first layer subcategory
+    - If this still bug, reset all items / re-create the items
 
   
 

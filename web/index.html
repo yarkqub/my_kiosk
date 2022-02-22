@@ -301,6 +301,7 @@
         }
 
         function reset_items() {
+            cur_sub_item = []
             item_list.innerHTML = ""
             items_data.forEach(element => {
                 item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
@@ -372,60 +373,46 @@
 
         click(".items", data => {
             let selected_menu = data.getAttribute("data-id")
-            if (!cur_sub_item.length) {
-                let selected_item = items_data.find(item => item.code == selected_menu)
-                cur_sub_item = selected_item.sub_item
-                item_list.innerHTML = ""
-                if (cur_sub_item.length > 0) {
-                    cur_sub_item.forEach(element => {
+            if (cur_sub_item.length == 0) {
+                cur_sub_item = items_data.find(item => item.code == selected_menu)
+                if (cur_sub_item.sub_item.length > 0) {
+                    item_list.innerHTML = ""
+                    cur_sub_item.sub_item.forEach(element => {
                         item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
                     })
                 }
                 else {
-                    let check_cart = carts.some(item_cart => item_cart.code == selected_item.code && item_cart.selected == item_cart.selected)
+                    let check_cart = carts.some(item => item.code == cur_sub_item.code && item.selected == cur_sub_item.selected)
                     if (!check_cart) {
-                        let make_cart = selected_item
+                        let make_cart = cur_sub_item
                         make_cart.cart_qty = 1
-                        make_cart.selected = selected_item.selected
                         carts.push(make_cart)
                     }
                     else {
-                        let get_cart = carts.find(crt => crt.code == selected_item.code)
-                        get_cart.cart_qty = Number(get_cart.cart_qty) + 1
-                        get_cart.selected = selected_item.selected
+                        let get_cart = carts.find(crt => crt.code == cur_sub_item.code && crt.selected == cur_sub_item.selected)
+                        get_cart.cart_qty++
                     }
                     reset_items()
                 }
             }
             else {
-                let sub_list = cur_sub_item[0].selected
-                let the_item = items_data
-                for (let i = 0; i < sub_list.length; i++) {
-                    the_item = the_item.find(item => item.code == sub_list[i])
-                    if (i != sub_list.length - 1) {
-                        the_item = the_item.sub_item
-                    }
-                }
-                the_item = the_item.sub_item.find(el => el.code == selected_menu)
-                cur_sub_item = the_item.sub_item
-                item_list.innerHTML = ""
-                if (cur_sub_item.length > 0) {
-                    cur_sub_item.forEach(element => {
+                cur_sub_item = cur_sub_item.sub_item.find(item => item.code == selected_menu)
+                if (cur_sub_item.sub_item.length > 0) {
+                    item_list.innerHTML = ""
+                    cur_sub_item.sub_item.forEach(element => {
                         item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
                     })
                 }
                 else {
-                    let check_cart = carts.some(item_cart => item_cart.code == the_item.code && item_cart.selected == item_cart.selected)
+                    let check_cart = carts.some(item => item.code == cur_sub_item.code && item.selected == cur_sub_item.selected)
                     if (!check_cart) {
-                        let make_cart = the_item
+                        let make_cart = cur_sub_item
                         make_cart.cart_qty = 1
-                        make_cart.selected = the_item.selected
                         carts.push(make_cart)
                     }
                     else {
-                        let get_cart = carts.find(crt => crt.code == the_item.code)
-                        get_cart.cart_qty = Number(get_cart.cart_qty) + 1
-                        get_cart.selected = the_item.selected
+                        let get_cart = carts.find(crt => crt.code == cur_sub_item.code && crt.selected == cur_sub_item.selected)
+                        get_cart.cart_qty++
                     }
                     reset_items()
                 }
