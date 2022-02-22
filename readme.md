@@ -48,7 +48,7 @@ for now this project is open source, so you can see the code and contribute to i
 
 ✅ Edit selected product
 
-* Add back button at cashier?
+✅ Add back button at cashier?
 
 * Fix code finder for cashier
 
@@ -57,6 +57,12 @@ for now this project is open source, so you can see the code and contribute to i
 * Disable products that are out of stock
 
 * Generate sales report
+
+* Styling kitchen display
+
+* Styling client display
+
+* Add function to client display
 
 ## Bugs fixed
 

@@ -158,6 +158,18 @@
         .span2 {
             grid-column: span 2;
         }
+        .clear_items{
+            min-width: 30px;
+            border: 1px solid black;
+            background: #b2ebf2;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            min-height: 100px;
+            max-height: 200px;
+            border-radius: 8px;
+            box-shadow: #ffeb3b 1px 1px 3px 0px;
+        }
     </style>
 </head>
 
@@ -376,7 +388,7 @@
             if (cur_sub_item.length == 0) {
                 cur_sub_item = items_data.find(item => item.code == selected_menu)
                 if (cur_sub_item.sub_item.length > 0) {
-                    item_list.innerHTML = ""
+                    item_list.innerHTML = `<div class='clear_items'>🔙</div>`
                     cur_sub_item.sub_item.forEach(element => {
                         item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
                     })
@@ -398,7 +410,7 @@
             else {
                 cur_sub_item = cur_sub_item.sub_item.find(item => item.code == selected_menu)
                 if (cur_sub_item.sub_item.length > 0) {
-                    item_list.innerHTML = ""
+                    item_list.innerHTML = `<div class='clear_items'>🔙</div>`
                     cur_sub_item.sub_item.forEach(element => {
                         item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
                     })
@@ -427,6 +439,9 @@
                 update_carts()
             }
 
+        })
+        click(".clear_items", () => {
+            reset_items()
         })
 
         function click(selector, callback) {
