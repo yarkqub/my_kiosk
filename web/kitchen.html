@@ -7,6 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kitchen</title>
     <script src="/socket.io/socket.io.js"></script>
+    <style>
+        .orange{
+            background-color: #ffa500;
+            color: #ffffff;
+        }
+    </style>
 </head>
 
 <body>
@@ -24,7 +30,11 @@
                         dt.items.forEach(di => {
                             items += `<br>&nbsp;&nbsp;- ${di.name} &times; ${di.cart_qty}`
                         })
-                        order_list.insertAdjacentHTML("beforeend", `<b>#${dt.id} [${dt.status}]</b> ${items}<hr>`)
+                        let color = ''
+                        if(dt.status == 2){
+                            color = 'orange'
+                        }
+                        order_list.insertAdjacentHTML("beforeend", `<span class='${color}'><b>#${dt.id} [${dt.status}]</b> ${items}</span><hr>`)
                     }
                 })
 

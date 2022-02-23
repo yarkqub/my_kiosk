@@ -64,6 +64,8 @@ for now this project is open source, so you can see the code and contribute to i
 
 * Add function to client display
 
+* Make individual item have status done or not done
+
 ## Bugs fixed
 
 ✅ Fix cashier select item that have subcategory

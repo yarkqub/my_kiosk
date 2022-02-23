@@ -20,6 +20,7 @@
             display: grid;
             grid-gap: 5px;
             grid-template-columns: 3fr 1fr;
+            padding: 8px;
         }
 
         #my_order {
@@ -43,6 +44,11 @@
         .item {
             background: #0000ff;
             min-height: 50px;
+            border-radius: 4px;
+            padding: 8px;
+            color: white;
+            border: 1px solid #00ffbf;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -56,14 +62,15 @@
     <script>
         (() => {
             const socket = io();
+            let items_data = []
             socket.emit("get_item");
             socket.on("get_item", res => {
+                items_data = res
                 document.querySelector("#item_list").innerHTML = "";
                 res.forEach(re => {
-                    document.querySelector("#item_list").insertAdjacentHTML("beforeend", `<div class='item'>${re.code} - <span clas='item_name'>${re.name}</span> (RM ${re.price}) [${re.qty}]</div>`)
+                    document.querySelector("#item_list").insertAdjacentHTML("beforeend", `<div class='item' data-id='${re.code}'>${re.code} - <span clas='item_name'>${re.name}</span> (RM ${re.price}) [${re.qty}]</div>`)
                 })
             })
-
         })()
     </script>
 </body>
