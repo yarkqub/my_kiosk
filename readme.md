@@ -95,3 +95,7 @@ Credits to:
 * W3schools
 
 * WebDevSimplified (YouTube)
+
+## Contact
+
+if you got any problem or question, please contact me at: telegram @muhdyarkqub | email: myarkqub@gmail.com

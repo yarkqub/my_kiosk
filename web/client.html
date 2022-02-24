@@ -77,8 +77,16 @@
         }
 
         .rem {
-            position: absolute;
-            right: 8px;
+            /*boostrap danger*/
+            background-color: #ff0000;
+            border-radius: 50%;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.5em;
+            height: 20px;
+            width: 20px;
+
         }
 
         .btn {
@@ -147,12 +155,34 @@
                 reset_display()
             })
 
+            click2(".rem", data => {
+                let index = data.target.parentNode.getAttribute("data-index")
+                my_cart.splice(index, 1)
+                update_cart()
+            })
+
+            click2(".add", data => {
+                let index = data.target.parentNode.getAttribute("data-index")
+                my_cart[index].cart_qty++
+                update_cart()
+            })
+
+            click2(".sub", data => {
+                let index = data.target.parentNode.getAttribute("data-index")
+                if (my_cart[index].cart_qty > 1) {
+                    my_cart[index].cart_qty--
+                }
+                update_cart()
+            })
+
             function update_cart() {
                 let my_cart_list = document.querySelector("#my_order")
                 my_cart_list.innerHTML = "";
                 total = 0
                 my_cart.forEach(mc => {
-                    my_cart_list.insertAdjacentHTML("beforeend", `<div class='cart_item' data-id='${mc.code}'><button class="btn rem">&times;</button><br><span clas='item_name'>${mc.name}</span> (RM ${mc.price} &times; ${mc.cart_qty})<br><button class='btn add'>+</button> <button class='btn sub'>-</button></div>`)
+                    //get index
+                    let index = my_cart.indexOf(mc)
+                    my_cart_list.insertAdjacentHTML("beforeend", `<div class='cart_item' data-index='${index}' data-id='${mc.code}'><button class="btn rem">&times;</button> <span clas='item_name'>${mc.name}</span><br>(RM ${mc.price} &times; ${mc.cart_qty}) <button class='btn add'>+</button> <button class='btn sub'>-</button></div>`)
                     total += mc.price * mc.cart_qty
                 })
                 total = total.toFixed(2)
@@ -171,6 +201,12 @@
             function click(selector, callback) {
                 document.addEventListener("click", e => {
                     if (e.target.matches(selector)) callback(e.target)
+                })
+            }
+
+            function click2(selector, callback) {
+                document.addEventListener("click", e => {
+                    if (e.target.matches(selector)) callback(e)
                 })
             }
         })()
