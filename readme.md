@@ -4,13 +4,12 @@
 
   
 
-- Test POS Sistem, just begining more to add later
+- Simple POS Sistem, just begining more to add later
 
-  
-
-This is the point of sale system for my kiosk. It is a simple POS system that will allow you to sell items to customers. This current progress only finished around 20% of it's funcionality.
+This is the point of sale system for my kiosk. It is a simple POS system that will allow you to sell items to customers. This current progress only finished around 20% of it's funcionality. We will be adding more features to it as we go along. Also we will fix the bugs that we find.
 
 for now this project is open source, so you can see the code and contribute to it.
+[Preview](https://remarkable-magical-cake.glitch.me/)
 
   
 
@@ -77,13 +76,6 @@ for now this project is open source, so you can see the code and contribute to i
 ✅ Fix bug select items in first layer subcategory
     - If this still bug, reset all items / re-create the items
 
-  
-
-## License
-
-This project is licensed under the MIT license.
-
-  
   
 
 Credits to:
