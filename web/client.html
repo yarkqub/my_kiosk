@@ -14,6 +14,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         #body_warper {
@@ -95,6 +96,58 @@
             height: 30px;
             border-radius: 4px;
         }
+
+        #modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+            grid-template-rows: auto 100%;
+            grid-row-start: auto;
+        }
+
+        #modal_title {
+            background: #00ffbf;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 1.5em;
+            text-align: center;
+            width: 80vw;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10vw;
+            margin-top: 20px;
+        }
+
+        #modal_body {
+            background: white;
+            color: black;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 1.5em;
+            text-align: center;
+            width: 80vw;
+            margin-left: 10vw;
+            overflow-y: scroll;
+            height: 500px;
+        }
+
+        #close_modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff0000;
+            color: white;
+            border-radius: 4px;
+            width: 25px;
+            height: 25px;
+        }
     </style>
 </head>
 
@@ -103,6 +156,13 @@
         <div id="item_list"></div>
         <div id="my_order">My order</div>
         <div id="checkout">Chckout</div>
+    </div>
+
+    <div id="modal">
+        <div id="modal_title">Checkout <button id="close_modal">&times;</button></div>
+        <div id="modal_body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem dignissimos esse
+            rerum animi neque earum dolore, officia tenetur, ad odit corporis nesciunt distinctio illum inventore
+            asperiores autem facere molestias deserunt.</div>
     </div>
     <script>
         (() => {
@@ -119,6 +179,13 @@
                 res.forEach(re => {
                     item_list.insertAdjacentHTML("beforeend", `<div class='item' data-id='${re.code}'>${re.code} - <span clas='item_name'>${re.name}</span> (RM ${re.price}) [${re.qty}]</div>`)
                 })
+            })
+
+            socket.on("order_id", data => {
+                let modal = document.querySelector("#modal_body")
+                modal.innerHTML = `<h1>Your order #${data}</h1>`
+                my_cart = []
+                update_cart()
             })
 
             click(".item", e => {
@@ -155,24 +222,38 @@
                 reset_display()
             })
 
-            click2(".rem", data => {
-                let index = data.target.parentNode.getAttribute("data-index")
+            click(".rem", data => {
+                let index = data.parentNode.getAttribute("data-index")
                 my_cart.splice(index, 1)
                 update_cart()
             })
 
-            click2(".add", data => {
-                let index = data.target.parentNode.getAttribute("data-index")
+            click(".add", data => {
+                let index = data.parentNode.getAttribute("data-index")
                 my_cart[index].cart_qty++
                 update_cart()
             })
 
-            click2(".sub", data => {
-                let index = data.target.parentNode.getAttribute("data-index")
+            click(".sub", data => {
+                let index = data.parentNode.getAttribute("data-index")
                 if (my_cart[index].cart_qty > 1) {
                     my_cart[index].cart_qty--
                 }
                 update_cart()
+            })
+
+            click("#checkout_btn", () => {
+                //show modal
+                let modal = document.querySelector("#modal")
+                modal.style.display = "grid"
+                let modal_body = document.querySelector("#modal_body")
+                modal_body.innerHTML = `<div>Making order... please wait</div>`
+                socket.emit("client_order", my_cart)
+            })
+
+            click("#close_modal", () => {
+                let modal = document.querySelector("#modal")
+                modal.style.display = "none"
             })
 
             function update_cart() {
@@ -182,12 +263,12 @@
                 my_cart.forEach(mc => {
                     //get index
                     let index = my_cart.indexOf(mc)
-                    my_cart_list.insertAdjacentHTML("beforeend", `<div class='cart_item' data-index='${index}' data-id='${mc.code}'><button class="btn rem">&times;</button> <span clas='item_name'>${mc.name}</span><br>(RM ${mc.price} &times; ${mc.cart_qty}) <button class='btn add'>+</button> <button class='btn sub'>-</button></div>`)
+                    my_cart_list.insertAdjacentHTML("beforeend", `<div class='cart_item' data-index='${index}' data-id='${mc.code}'><button class="btn rem">&times;</button> <span clas='item_name'>${mc.name}</span><br>(RM ${mc.price} &times; ${mc.cart_qty}) <button class='btn sub'>-</button> <button class='btn add'>+</button> </div>`)
                     total += mc.price * mc.cart_qty
                 })
                 total = total.toFixed(2)
                 let checkout = document.querySelector("#checkout")
-                checkout.innerHTML = `<div>Total: RM ${total}</div>`
+                checkout.innerHTML = `<div>Total: RM ${total}</div><br> <button id="checkout_btn">Checkout</button>`
             }
 
             function reset_display() {
@@ -204,11 +285,6 @@
                 })
             }
 
-            function click2(selector, callback) {
-                document.addEventListener("click", e => {
-                    if (e.target.matches(selector)) callback(e)
-                })
-            }
         })()
     </script>
 </body>

@@ -50,6 +50,8 @@ for now this project is open source, so you can see the code and contribute to i
 
 ✅ Add back button at cashier?
 
+✅ Add function to client display
+
 * Fix code finder for cashier
 
 * Fix the bug the product quantity when product is added to the cart
@@ -62,9 +64,11 @@ for now this project is open source, so you can see the code and contribute to i
 
 * Styling client display
 
-* Add function to client display
-
 * Make individual item have status done or not done
+
+* After client order, display the receipt 
+
+* Make receipt can be printed
 
 ## Bugs fixed
 
@@ -98,4 +102,4 @@ Credits to:
 
 ## Contact
 
-if you got any problem or question, please contact me at: telegram @muhdyarkqub | email: myarkqub@gmail.com
+if you got any problem or question, please contact me at: telegram [@muhdyarkqub](https://t.me/MuhdYarkqub) | email: myarkqub@gmail.com
