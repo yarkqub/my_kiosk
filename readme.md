@@ -76,7 +76,11 @@ for now this project is open source, so you can see the code and contribute to i
 ✅ Fix bug select items in first layer subcategory
     - If this still bug, reset all items / re-create the items
 
-  
+## Extra info
+
+To initiate your product go to `https://localhost:3000/admin.html` and use password `123` to login. You can add, edit and delete products in that page as admin. If you need to reset your order or your list of items just edit file `item.json` and `order.json`, to make it empty make sure put [] in them, don't let the files empty. We notice for production we will require diffrent apps to handle the client side as this apps act as a server. We will be adding more features to this app as we go along.
+
+
 
 Credits to:
 

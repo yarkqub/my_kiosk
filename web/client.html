@@ -183,9 +183,21 @@
 
             socket.on("order_id", data => {
                 let modal = document.querySelector("#modal_body")
-                modal.innerHTML = `<h1>Your order #${data}</h1>`
+                modal.innerHTML = `<h1>Your order #${data.order_id}</h1><br>`
+                total = 0
+                data.items.forEach(item => {
+                    let this_total = item.cart_qty * item.price
+                    total += this_total
+                    modal.innerHTML += `${item.code} ${item.name} (RM ${item.price} * ${item.cart_qty})  <b>RM ${this_total.toFixed(2)}</b><br>`
+                })
+                modal.innerHTML += `<br><br>Total: <b>RM ${total.toFixed(2)}</b>`
                 my_cart = []
                 update_cart()
+                let my_print = window.open("", "my_print", "width=800,height=600")
+                my_print.document.write(modal.innerHTML)
+                my_print.print()
+                my_print.close()
+
             })
 
             click(".item", e => {
@@ -243,12 +255,13 @@
             })
 
             click("#checkout_btn", () => {
-                //show modal
-                let modal = document.querySelector("#modal")
-                modal.style.display = "grid"
-                let modal_body = document.querySelector("#modal_body")
-                modal_body.innerHTML = `<div>Making order... please wait</div>`
-                socket.emit("client_order", my_cart)
+                if (my_cart.length > 0) {
+                    let modal = document.querySelector("#modal")
+                    modal.style.display = "grid"
+                    let modal_body = document.querySelector("#modal_body")
+                    modal_body.innerHTML = `<div>Making order... please wait</div>`
+                    socket.emit("client_order", my_cart)
+                }
             })
 
             click("#close_modal", () => {

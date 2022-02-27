@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
     })
     socket.on("client_order", data => {
         let get_order = JSON.parse(fs.readFileSync('order.json'))
-        socket.emit("order_id", get_order.length)
+        socket.emit("order_id", { order_id: get_order.length, items: data })
         get_order.push({ id: get_order.length, items: data, status: 1 })
         let data_string = JSON.stringify(get_order)
         fs.writeFileSync('order.json', data_string)
