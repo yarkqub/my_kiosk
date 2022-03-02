@@ -8,8 +8,13 @@
     <title>Kitchen</title>
     <script src="/socket.io/socket.io.js"></script>
     <style>
-        .orange{
+        .orange {
             background-color: #ffa500;
+            color: #ffffff;
+        }
+
+        .white {
+            background-color: #ffffff;
             color: #ffffff;
         }
     </style>
@@ -28,10 +33,14 @@
                     if (dt.status != 0 && dt.status != 3) {
                         let items = ""
                         dt.items.forEach(di => {
-                            items += `<br>&nbsp;&nbsp;- ${di.name} &times; ${di.cart_qty}`
+                            if(!di.is_done) {
+                                items += `<br>&nbsp;&nbsp;- ${di.name} &times; ${di.cart_qty}`
+                            } else {
+                                items += `<br>&nbsp;&nbsp;-<s> ${di.name} &times; ${di.cart_qty} </s>`
+                            }
                         })
                         let color = ''
-                        if(dt.status == 2){
+                        if (dt.status == 2) {
                             color = 'orange'
                         }
                         order_list.insertAdjacentHTML("beforeend", `<span class='${color}'><b>#${dt.id} [${dt.status}]</b> ${items}</span><hr>`)

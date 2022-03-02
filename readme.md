@@ -41,16 +41,6 @@ for now this project is open source, so you can see the code and contribute to i
 
 ## To do
 
-✅ Add subcategory to the products
-
-✅ Delete the subcategory from the products
-
-✅ Edit selected product
-
-✅ Add back button at cashier?
-
-✅ Add function to client display
-
 * Fix code finder for cashier
 
 * Fix the bug the product quantity when product is added to the cart
@@ -63,11 +53,12 @@ for now this project is open source, so you can see the code and contribute to i
 
 * Styling client display
 
-* Make individual item have status done or not done
+* Make receipt can be printed (Can print without prompt)
 
-* After client order, display the receipt 
+* Make cashier can re-print recipt for customer
 
-* Make receipt can be printed
+* Admin can add image to product
+
 
 ## Bugs fixed
 
@@ -75,6 +66,25 @@ for now this project is open source, so you can see the code and contribute to i
 
 ✅ Fix bug select items in first layer subcategory
     - If this still bug, reset all items / re-create the items
+
+
+## To do done
+
+✅ Add subcategory to the products
+
+✅ Delete the subcategory from the products
+
+✅ Edit selected product
+
+✅ Add back button at cashier?
+
+✅ Add function to client display
+
+✅ After client order, display the receipt 
+
+✅ Make individual item have status done or not done
+
+
 
 ## Extra info
 

@@ -197,7 +197,10 @@ io.on('connection', (socket) => {
 const createWindow = () => {
     const win = new electron.BrowserWindow({
         kiosk: true,
-        autoHideMenuBar: true
+        autoHideMenuBar: true,
+        webContents: {
+            print: { silent: true }
+        }
     });
     win.removeMenu();
     win.loadURL(`http://127.0.0.1:${port}/app.html`);

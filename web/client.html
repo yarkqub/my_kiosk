@@ -190,14 +190,13 @@
                     total += this_total
                     modal.innerHTML += `${item.code} ${item.name} (RM ${item.price} * ${item.cart_qty})  <b>RM ${this_total.toFixed(2)}</b><br>`
                 })
-                modal.innerHTML += `<br><br>Total: <b>RM ${total.toFixed(2)}</b>`
+                modal.innerHTML += `<br><br>Total: <b>RM ${total.toFixed(2)}</b><br><br><br><br><br>`
                 my_cart = []
                 update_cart()
                 let my_print = window.open("", "my_print", "width=800,height=600")
                 my_print.document.write(modal.innerHTML)
                 my_print.print()
                 my_print.close()
-
             })
 
             click(".item", e => {
@@ -296,6 +295,13 @@
                 document.addEventListener("click", e => {
                     if (e.target.matches(selector)) callback(e.target)
                 })
+            }
+
+            function getInnerText(template) {
+                //convert html to text
+                template = template.replace(/<br>/g, "\r\n")
+                template = template.replace(/<\/?[^>]+(>|$)/g, "")
+                return template
             }
 
         })()

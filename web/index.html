@@ -158,7 +158,8 @@
         .span2 {
             grid-column: span 2;
         }
-        .clear_items{
+
+        .clear_items {
             min-width: 30px;
             border: 1px solid black;
             background: #b2ebf2;
@@ -302,11 +303,11 @@
             let total = 0
             carts.forEach((crt, i) => {
                 total += Number(crt.price) * Number(crt.cart_qty)
-                if (order_status == 3) {
+                if (order_status == 3 || crt.is_done) {
                     recipt_items.insertAdjacentHTML("beforeend", `<li class='rec_list'>${crt.name} [RM ${crt.price}] | QTY: ${crt.cart_qty}</li>`)
                 }
                 else {
-                    recipt_items.insertAdjacentHTML("beforeend", `<li class='rec_list' data-index='${i}'><button class='btn do_remove'>&times;</button> ${crt.name} [RM ${crt.price}] |<br> QTY: ${crt.cart_qty} <button class='btn do_sub'>-</button> <button class='btn do_add'>+</button></li>`)
+                    recipt_items.insertAdjacentHTML("beforeend", `<li class='rec_list' data-index='${i}'><button class='btn do_remove'>&times;</button> ${crt.name} [RM ${crt.price}] |<br> QTY: ${crt.cart_qty} <button class='btn do_sub'>-</button> <button class='btn do_add'>+</button> <button class='btn do_item_done'>✅</button></li>`)
                 }
             })
             recipt_items.insertAdjacentHTML("beforeend", `<br>RM ${total.toFixed(2)}`)
@@ -363,10 +364,24 @@
             }
             update_carts()
         })
+        click(".do_item_done", data => {
+            let index = data.parentNode.getAttribute("data-index")
+            carts[index].is_done = true
+            update_carts()
+        })
 
         click("#do_checkout", () => {
             if (carts.length) {
                 if (order_status != 3) {
+                    let check_no_done = carts.some(item => item.is_done == false)
+                    console.log(check_no_done)
+                    if (!check_no_done) {
+                        socket.emit("order_done", order_id)
+                        order_id = tmp_order_id
+                        carts = []
+                        update_carts()
+                        return
+                    }
                     socket.emit("order", { order_id: order_id, cart: carts })
                     if (order_id == tmp_order_id) {
                         socket.emit("get_order_id")
@@ -387,50 +402,35 @@
             let selected_menu = data.getAttribute("data-id")
             if (cur_sub_item.length == 0) {
                 cur_sub_item = items_data.find(item => item.code == selected_menu)
-                if (cur_sub_item.sub_item.length > 0) {
-                    item_list.innerHTML = `<div class='clear_items'>🔙</div>`
-                    cur_sub_item.sub_item.forEach(element => {
-                        item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
-                    })
-                }
-                else {
-                    let check_cart = carts.some(item => item.code == cur_sub_item.code && item.selected == cur_sub_item.selected)
-                    if (!check_cart) {
-                        let make_cart = cur_sub_item
-                        make_cart.cart_qty = 1
-                        carts.push(make_cart)
-                    }
-                    else {
-                        let get_cart = carts.find(crt => crt.code == cur_sub_item.code && crt.selected == cur_sub_item.selected)
-                        get_cart.cart_qty++
-                    }
-                    reset_items()
-                }
             }
             else {
                 cur_sub_item = cur_sub_item.sub_item.find(item => item.code == selected_menu)
-                if (cur_sub_item.sub_item.length > 0) {
-                    item_list.innerHTML = `<div class='clear_items'>🔙</div>`
-                    cur_sub_item.sub_item.forEach(element => {
-                        item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
-                    })
+            }
+            if (cur_sub_item.sub_item.length > 0) {
+                item_list.innerHTML = `<div class='clear_items'>🔙</div>`
+                cur_sub_item.sub_item.forEach(element => {
+                    item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
+                })
+            }
+            else {
+                let check_cart = carts.some(item => item.code == cur_sub_item.code && item.selected == cur_sub_item.selected)
+                if (!check_cart) {
+                    let make_cart = cur_sub_item
+                    make_cart.cart_qty = 1
+                    make_cart.is_done = false
+                    carts.push(make_cart)
                 }
                 else {
-                    let check_cart = carts.some(item => item.code == cur_sub_item.code && item.selected == cur_sub_item.selected)
-                    if (!check_cart) {
-                        let make_cart = cur_sub_item
-                        make_cart.cart_qty = 1
-                        carts.push(make_cart)
-                    }
-                    else {
-                        let get_cart = carts.find(crt => crt.code == cur_sub_item.code && crt.selected == cur_sub_item.selected)
+                    let get_cart = carts.find(crt => crt.code == cur_sub_item.code && crt.selected == cur_sub_item.selected)
+                    if (!get_cart.is_done) {
                         get_cart.cart_qty++
                     }
-                    reset_items()
                 }
+                reset_items()
             }
             update_carts()
         })
+
         click("#do_done", () => {
             if (order_status != 0) {
                 socket.emit("order_done", order_id)
