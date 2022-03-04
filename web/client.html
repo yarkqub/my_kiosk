@@ -177,7 +177,11 @@
                 items_data = res
                 item_list.innerHTML = "";
                 res.forEach(re => {
-                    item_list.insertAdjacentHTML("beforeend", `<div class='item' data-id='${re.code}'>${re.code} - <span clas='item_name'>${re.name}</span> (RM ${re.price}) [${re.qty}]</div>`)
+                    let img = "";
+                    if(re.image){
+                        img = `<img src="./images/${re.image}" width="100%" height="auto">`
+                    }
+                    item_list.insertAdjacentHTML("beforeend", `<div class='item' data-id='${re.code}'>${re.code} - <span clas='item_name'>${re.name}</span> (RM ${re.price}) [${re.qty}] ${img}</div>`)
                 })
             })
 
