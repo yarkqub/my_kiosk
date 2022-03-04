@@ -155,7 +155,7 @@ io.on('connection', (socket) => {
             let save_image = data.image.replace(/^data:image\/\w+;base64,/, "")
             let new_name = Date.now() + "_" + rand(1000, 9999) + ".png"
             fs.writeFileSync(`./web/images/${new_name}`, save_image, 'base64')
-            data.image = `${new_name}.png`
+            data.image = new_name
         }
         let get_data = JSON.parse(fs.readFileSync('item.json'))
         let parent = data.selected
