@@ -129,6 +129,7 @@
             let item_list = []
             let item_selected = []
             let edit_selected = []
+            let image_data = "";
 
             socket.on("get_item", res => {
                 item_list = res
@@ -156,6 +157,8 @@
                                 Name: <input type='text' id='add_name'><br>
                                 Price: <input type='number' step='0.01' id='add_price'><br>
                                 Qty: <input type='number' id='add_qty' min='0' value='1'><br>
+                                Image: <input type='file' id='add_image' accept="image/*"><br>
+                                <div id='image_display'></div>
                                 <button class='btn btn-primary' id='add_item'>Add</button>
                             </div>
                             <div id="panel_edit_item">
@@ -193,6 +196,20 @@
                 ///let password = prompt("Password")
                 password_container.style.display = "block"
             }
+
+            change("#add_image", e => {
+                let image_display = document.querySelector("#image_display")
+                image_display.innerHTML = "Loading..."
+                console.log("Changed item'?", e.files[0])
+                const reader = new FileReader();
+                reader.onload = function () {
+                    const base64 = this.result.replace(/.*base64,/, '');
+                    //console.log(base64)
+                    image_display.innerHTML = `<img src="data:image/png;base64,${base64}" width="100px" height="100px">`
+                    image_data = base64
+                };
+                reader.readAsDataURL(e.files[0]);
+            })
 
             click(".item_btn", e => {
                 let id = e.getAttribute("data-id")
@@ -239,7 +256,7 @@
                 panel_add_item.style.display = "none"
             })
 
-            click("#save_item", ()=>{
+            click("#save_item", () => {
                 let edit_code = document.querySelector("#edit_code")
                 let edit_name = document.querySelector("#edit_name")
                 let edit_price = document.querySelector("#edit_price")
@@ -298,10 +315,14 @@
                         "name": add_name.value,
                         "price": add_price.value,
                         "qty": add_qty.value,
+                        "image": image_data,
                         "sub_item": []
                     })
                     selected_item.innerHTML = add_code.value = add_name.value = add_price.value = add_qty.value = ""
                     item_selected = []
+                    image_data = ""
+                    let image_display = document.querySelector("#image_display")
+                    image_display.innerHTML = "";
                     display_item_list()
                 }
                 else {
@@ -316,6 +337,11 @@
                 })
             }
 
+            function change(selector, callback) {
+                document.addEventListener("change", e => {
+                    if (e.target.matches(selector)) callback(e.target)
+                }, false)
+            }
 
             function click(selector, callback) {
                 document.addEventListener("click", e => {

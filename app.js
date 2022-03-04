@@ -3,7 +3,9 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const io = new Server(server, {
+    maxHttpBufferSize: 1e8
+});
 const fs = require('fs');
 const admin_password = '123'
 const port = process.env.PORT || 3000;
@@ -14,6 +16,9 @@ if (!fs.existsSync('item.json')) {
 }
 if (!fs.existsSync('order.json')) {
     fs.writeFileSync('order.json', '[]');
+}
+if (!fs.existsSync('./web/images/index.html')) {
+    fs.writeFileSync('./web/images/index.html', '[]');
 }
 
 let items = []
@@ -146,6 +151,12 @@ io.on('connection', (socket) => {
     })
 
     socket.on("add_item", data => {
+        if (data.image) {
+            let save_image = data.image.replace(/^data:image\/\w+;base64,/, "")
+            let new_name = Date.now() + "_" + rand(1000, 9999) + ".png"
+            fs.writeFileSync(`./web/images/${new_name}`, save_image, 'base64')
+            data.image = `${new_name}.png`
+        }
         let get_data = JSON.parse(fs.readFileSync('item.json'))
         let parent = data.selected
         if (parent.length > 0) {
@@ -210,3 +221,9 @@ electron.app.whenReady().then(createWindow);
 server.listen(port, () => {
     console.log(`listening on *: ${port}`);
 });
+
+function rand(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
