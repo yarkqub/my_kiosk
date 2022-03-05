@@ -15,6 +15,7 @@
             margin: 0;
             padding: 0;
             font-family: Arial, Helvetica, sans-serif;
+            user-select: none;
         }
 
         #body_warper {
@@ -51,9 +52,11 @@
             max-height: 80px;
             border-radius: 4px;
             padding: 8px;
-            color: white;
+            color: black;
             border: 1px solid #00ffbf;
             cursor: pointer;
+            text-shadow: 0 0 20px white;
+            font-weight: 600;
         }
 
         .rst_display {
@@ -175,14 +178,7 @@
             socket.emit("get_item");
             socket.on("get_item", res => {
                 items_data = res
-                item_list.innerHTML = "";
-                res.forEach(re => {
-                    let img = "";
-                    if(re.image){
-                        img = `<img src="./images/${re.image}" width="100%" height="auto">`
-                    }
-                    item_list.insertAdjacentHTML("beforeend", `<div class='item' data-id='${re.code}'>${re.code} - <span clas='item_name'>${re.name}</span> (RM ${re.price}) [${re.qty}] ${img}</div>`)
-                })
+                reset_display()
             })
 
             socket.on("order_id", data => {
@@ -291,7 +287,11 @@
                 selected_item = []
                 item_list.innerHTML = "";
                 items_data.forEach(i => {
-                    item_list.insertAdjacentHTML("beforeend", `<div class='item' data-id='${i.code}'>${i.code} - <span clas='item_name'>${i.name}</span> (RM ${i.price}) [${i.qty}]</div>`)
+                    let img = "";
+                    if (i.image) {
+                        img = `background: url("./images/${i.image}");background-size: contain; background-position: center; background-repeat: no-repeat;`
+                    }
+                    item_list.insertAdjacentHTML("beforeend", `<div class='item' data-id='${i.code}' style='${img}'>${i.code} - <span clas='item_name'>${i.name}</span> (RM ${i.price})</div>`)
                 })
             }
 
