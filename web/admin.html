@@ -168,6 +168,8 @@
                                 Name: <input type='text' id='edit_name'><br>
                                 Price: <input type='number' step='0.01' id='edit_price'><br>
                                 Qty: <input type='number' id='edit_qty' min='0' value='1'><br>
+                                Image: <input type='file' id='edit_image' accept="image/*"><br>
+                                <div id='edit_image_display'></div>
                                 <button class='btn btn-primary' id='save_item'>Save</button>
                                 <button class='btn btn-primary' id='cancel_edit'>Cancel</button>
                             </div>
@@ -197,6 +199,19 @@
                 password_container.style.display = "block"
             }
 
+            change("#edit_image", e => {
+                let image_display = document.querySelector("#edit_image_display")
+                image_display.innerHTML = "Loading..."
+                let file = e.files[0]
+                let reader = new FileReader()
+                reader.readAsDataURL(file)
+                reader.onload = () => {
+                    image_data = reader.result
+                    image_display.innerHTML = `<img src="${image_data}" width="100px">`
+                }
+
+            })
+
             change("#add_image", e => {
                 let image_display = document.querySelector("#image_display")
                 image_display.innerHTML = "Loading..."
@@ -216,7 +231,11 @@
                 const selected_item = document.querySelector("#selected_item")
                 item_selected.push(id)
                 let getsubitem1_temp = item_list.find(item => item.code == item_selected[0])
-                selected_item.innerHTML = `<div>${getsubitem1_temp.code} - ${getsubitem1_temp.name} (RM ${getsubitem1_temp.price}) [${getsubitem1_temp.qty}] <hr><button id="close_item" class='btn'>❌</button> <button class="btn delete_item" data-id='${getsubitem1_temp.code}'>🚮</button> <button class='btn edit_item' data-id='${getsubitem1_temp.code}'>🖊</button></div>`
+                let img = "";
+                if (getsubitem1_temp.image) {
+                    img = `<img src="./images/${getsubitem1_temp.image}" width="150px">`
+                }
+                selected_item.innerHTML = `<div>${getsubitem1_temp.code} - ${getsubitem1_temp.name} (RM ${getsubitem1_temp.price}) [${getsubitem1_temp.qty}] <br>${img}<hr><button id="close_item" class='btn'>❌</button> <button class="btn delete_item" data-id='${getsubitem1_temp.code}'>🚮</button> <button class='btn edit_item' data-id='${getsubitem1_temp.code}'>🖊</button></div>`
                 let getsubitem1 = getsubitem1_temp.sub_item
                 if (item_selected.length > 1) {
                     for (let i = 1; i < item_selected.length; i++) {
@@ -271,13 +290,17 @@
                         name: edit_name.value,
                         price: edit_price.value,
                         qty: edit_qty.value,
-                        edit_selected: edit_selected
+                        edit_selected: edit_selected,
+                        image: image_data
                     })
                     panel_edit_item.style.display = "none"
                     panel_add_item.style.display = "block"
                 }
                 selected_item.innerHTML = ""
                 item_selected = []
+                image_data = ""
+                const edit_image_display = document.querySelector("#edit_image_display")
+                edit_image_display.innerHTML = ""
             })
 
             click("#cancel_edit", () => {
@@ -325,7 +348,7 @@
                     let add_image = document.querySelector("#add_image")
                     image_display.innerHTML = "";
                     add_image.value = "";
-                    
+
                     display_item_list()
                 }
                 else {
