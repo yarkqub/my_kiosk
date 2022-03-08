@@ -49,15 +49,17 @@ for now this project is open source, so you can see the code and contribute to i
 
 * Generate sales report
 
-* Styling kitchen display
+✅ Styling kitchen display
 
-* Styling client display
+✅ Styling client display
 
 * Make receipt can be printed (Can print without prompt)
 
 * Make cashier can re-print recipt for customer
 
-* Admin can add image to product
+ * Admin can create cashier account
+
+ * Make login for cashier
 
 
 ## Bugs fixed
@@ -83,6 +85,8 @@ for now this project is open source, so you can see the code and contribute to i
 ✅ After client order, display the receipt 
 
 ✅ Make individual item have status done or not done
+
+✅ Admin can add image to product
 
 
 
