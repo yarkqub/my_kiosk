@@ -10,6 +10,7 @@
     <style>
         * {
             font-family: Arial, Helvetica, sans-serif;
+            /*cursor: none;*/
         }
 
         #item_list {
@@ -346,18 +347,18 @@
             }
         })
 
-        click2(".do_remove", data => {
-            let index = data.target.parentNode.getAttribute("data-index")
+        click(".do_remove", data => {
+            let index = data.parentNode.getAttribute("data-index")
             carts.splice(index, 1)
             update_carts()
         })
-        click2(".do_add", data => {
-            let index = data.target.parentNode.getAttribute("data-index")
+        click(".do_add", data => {
+            let index = data.parentNode.getAttribute("data-index")
             carts[index].cart_qty++
             update_carts()
         })
-        click2(".do_sub", data => {
-            let index = data.target.parentNode.getAttribute("data-index")
+        click(".do_sub", data => {
+            let index = data.parentNode.getAttribute("data-index")
             carts[index].cart_qty--
             if (carts[index].cart_qty <= 0) {
                 carts.splice(index, 1)
@@ -400,6 +401,24 @@
 
         click(".items", data => {
             let selected_menu = data.getAttribute("data-id")
+            if (data.getAttribute("data-selected")) {
+                let selec = data.getAttribute("data-selected").split(",")
+                if (selec.length > 0) {
+                    cur_sub_item = items_data
+                    for (let i = 0; i < selec.length; i++) {
+                        console.log("c", cur_sub_item)
+                        if (i == selec.length - 1) {
+                            console.log("Last")
+                            cur_sub_item = cur_sub_item.find(item => item.code == selec[i])
+                        }
+                        else {
+                            console.log("not last, find", selec[i])
+                            cur_sub_item = cur_sub_item.find(item => item.code == selec[i])
+                        }
+                    }
+                }
+                code.value = ""
+            }
             if (cur_sub_item.length == 0) {
                 cur_sub_item = items_data.find(item => item.code == selected_menu)
             }
@@ -444,14 +463,61 @@
             reset_items()
         })
 
+        change1("#code", e => {
+            console.log("OK")
+            let code_ = e.value.split("*")
+            if (!code_[1]) {
+                code_[1] = 1
+            }
+            //make items array, Help, how to loop deeper / infinite without hardcode like this?
+            let item_array = []
+            items_data.forEach(el1 => {
+                if (el1.sub_item.length > 0) {
+                    el1.sub_item.forEach(el2 => {
+                        if (el2.sub_item.length > 0) {
+                            el2.sub_item.forEach(el3 => {
+                                if (el3.sub_item.length == 0) {
+                                    if (el3.code == code_[0]) {
+                                        item_array.push(el3)
+                                    }
+                                }
+                            })
+                        }
+                        else {
+                            if (el2.code == code_[0]) {
+                                item_array.push(el2)
+                            }
+                        }
+                    })
+                }
+                else {
+                    if (el1.code == code_[0]) {
+                        item_array.push(el1)
+                    }
+                }
+            })
+            item_list.innerHTML = `<div class='clear_items'>🔙</div>`
+            item_array.forEach(element => {
+                //pass selected item to each item here so it can select the item...
+                item_list.insertAdjacentHTML("beforeend", `<div class='items' data-selected='${element.selected}' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
+            })
+        })
+
         function click(selector, callback) {
             document.addEventListener("click", e => {
                 if (e.target.matches(selector)) callback(e.target)
             })
         }
-        function click2(selector, callback) {
-            document.addEventListener("click", e => {
-                if (e.target.matches(selector)) callback(e)
+
+        function change(selector, callback) {
+            document.addEventListener("change", e => {
+                if (e.target.matches(selector)) callback(e.target)
+            })
+        }
+
+        function change1(selector, callback) {
+            document.addEventListener("keyup", e => {
+                if (e.target.matches(selector)) callback(e.target)
             })
         }
     </script>
