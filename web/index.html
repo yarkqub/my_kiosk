@@ -288,6 +288,7 @@
                 }
             } else {
                 code.value += id
+                code_change(code.value)
             }
 
         })
@@ -463,9 +464,12 @@
             reset_items()
         })
 
-        change1("#code", e => {
-            console.log("OK")
-            let code_ = e.value.split("*")
+        change("#code", e => {
+            code_change(e.value)
+        })
+
+        function code_change(e) {
+            let code_ = e.split("*")
             if (!code_[1]) {
                 code_[1] = 1
             }
@@ -496,12 +500,17 @@
                     }
                 }
             })
-            item_list.innerHTML = `<div class='clear_items'>🔙</div>`
-            item_array.forEach(element => {
-                //pass selected item to each item here so it can select the item...
-                item_list.insertAdjacentHTML("beforeend", `<div class='items' data-selected='${element.selected}' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
-            })
-        })
+            if (item_array.length > 0) {
+                item_list.innerHTML = `<div class='clear_items'>🔙</div>`
+                item_array.forEach(element => {
+                    //pass selected item to each item here so it can select the item...
+                    item_list.insertAdjacentHTML("beforeend", `<div class='items' data-selected='${element.selected}' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
+                })
+            }
+            else {
+                reset_items()
+            }
+        }
 
         function click(selector, callback) {
             document.addEventListener("click", e => {
@@ -510,16 +519,11 @@
         }
 
         function change(selector, callback) {
-            document.addEventListener("change", e => {
+            document.addEventListener("input", e => {
                 if (e.target.matches(selector)) callback(e.target)
             })
         }
 
-        function change1(selector, callback) {
-            document.addEventListener("keyup", e => {
-                if (e.target.matches(selector)) callback(e.target)
-            })
-        }
     </script>
 </body>
 
