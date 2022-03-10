@@ -41,7 +41,7 @@ for now this project is open source, so you can see the code and contribute to i
 
 ## To do
 
-* Fix code finder for cashier
+* Fix code finder for cashier (on going)
 
 * Fix the bug the product quantity when product is added to the cart
 
@@ -49,9 +49,9 @@ for now this project is open source, so you can see the code and contribute to i
 
 * Generate sales report
 
-✅ Styling kitchen display
+✅ Styling kitchen display (We left it here because we are still working on it)
 
-✅ Styling client display
+✅ Styling client display (We left it here because we will be adding more features to it)
 
 * Make receipt can be printed (Can print without prompt)
 
@@ -60,6 +60,10 @@ for now this project is open source, so you can see the code and contribute to i
  * Admin can create cashier account
 
  * Make login for cashier
+
+ * Add option for item and can set default
+
+ * Add full size keyboard (alphabet) when cahier click on input
 
 
 ## Bugs fixed
