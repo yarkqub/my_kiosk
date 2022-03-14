@@ -41,56 +41,56 @@ for now this project is open source, so you can see the code and contribute to i
 
 ## To do
 
-* Fix code finder for cashier (on going)
+[ ] Fix code finder for cashier (on going)
 
-* Fix the bug the product quantity when product is added to the cart
+[ ] Fix the bug the product quantity when product is added to the cart
 
-* Disable products that are out of stock
+[ ] Disable products that are out of stock
 
-* Generate sales report
+[ ] Generate sales report
 
-✅ Styling kitchen display (We left it here because we are still working on it)
+[✅] Styling kitchen display (We left it here because we are still working on it)
 
-✅ Styling client display (We left it here because we will be adding more features to it)
+[✅] Styling client display (We left it here because we will be adding more features to it)
 
-* Make receipt can be printed (Can print without prompt)
+[ ] Make receipt can be printed (Can print without prompt)
 
-* Make cashier can re-print recipt for customer
+[ ] Make cashier can re-print recipt for customer
 
- * Admin can create cashier account
+[ ] Admin can create cashier account
 
- * Make login for cashier
+[ ] Make login for cashier
 
- * Add option for item and can set default
-
- * Add full size keyboard (alphabet) when cahier click on input
+[ ] Add option for item and can set default
 
 
 ## Bugs fixed
 
-✅ Fix cashier select item that have subcategory
+[✅] Fix cashier select item that have subcategory
 
-✅ Fix bug select items in first layer subcategory
+[✅] Fix bug select items in first layer subcategory
     - If this still bug, reset all items / re-create the items
 
 
 ## To do done
 
-✅ Add subcategory to the products
+[✅] Add full size keyboard (alphabet) when cahier click on input
 
-✅ Delete the subcategory from the products
+[✅] Add subcategory to the products
 
-✅ Edit selected product
+[✅] Delete the subcategory from the products
 
-✅ Add back button at cashier?
+[✅] Edit selected product
 
-✅ Add function to client display
+[✅] Add back button at cashier?
 
-✅ After client order, display the receipt 
+[✅] Add function to client display
 
-✅ Make individual item have status done or not done
+[✅] After client order, display the receipt 
 
-✅ Admin can add image to product
+[✅] Make individual item have status done or not done
+
+[✅] Admin can add image to product
 
 
 
