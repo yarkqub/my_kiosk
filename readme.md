@@ -9,7 +9,7 @@
 This is the point of sale system for my kiosk. It is a simple POS system that will allow you to sell items to customers. This current progress only finished around 20% of it's funcionality. We will be adding more features to it as we go along. Also we will fix the bugs that we find.
 
 for now this project is open source, so you can see the code and contribute to it.
-[Preview](https://remarkable-magical-cake.glitch.me/)
+[DEMO](https://harmless-horn-cemetery.glitch.me/) (Demo will not allow you to upload image)
 
   
 
