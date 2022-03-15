@@ -172,7 +172,8 @@
             border-radius: 8px;
             box-shadow: #ffeb3b 1px 1px 3px 0px;
         }
-        #full_keyboard{
+
+        #full_keyboard {
             grid-column: 1 / span 10;
             grid-row: 3 / span 2;
             grid-gap: 5px;
@@ -185,21 +186,25 @@
             height: 200px;
             display: none;
         }
+
         #full_keyboard>.half {
             width: 50%;
         }
-        .fkbd{
+
+        .fkbd {
             grid-column: span 2;
         }
 
-        .fkbd16{
+        .fkbd16 {
             grid-column: span 12;
         }
+
         .fkbd_button {
             border: 1px solid black;
             border-radius: 4px;
             cursor: pointer;
         }
+
         .fkbd_button:hover {
             box-shadow: inset black 1px 1px 2px;
         }
@@ -237,6 +242,16 @@
             <button class="kbd span2" data-id="enter">✔</button>
         </div>
         <div id="full_keyboard">
+            <button class="fkbd kbd fkbd_button" data-id='1'>1</button>
+            <button class="fkbd kbd fkbd_button" data-id='2'>2</button>
+            <button class="fkbd kbd fkbd_button" data-id='3'>3</button>
+            <button class="fkbd kbd fkbd_button" data-id='4'>4</button>
+            <button class="fkbd kbd fkbd_button" data-id='5'>5</button>
+            <button class="fkbd kbd fkbd_button" data-id='6'>6</button>
+            <button class="fkbd kbd fkbd_button" data-id='7'>7</button>
+            <button class="fkbd kbd fkbd_button" data-id='8'>8</button>
+            <button class="fkbd kbd fkbd_button" data-id='9'>9</button>
+            <button class="fkbd kbd fkbd_button" data-id='0'>0</button>
             <button class="fkbd kbd fkbd_button" data-id="Q">Q</button>
             <button class="fkbd kbd fkbd_button" data-id="W">W</button>
             <button class="fkbd kbd fkbd_button" data-id="E">E</button>
@@ -290,6 +305,7 @@
         const history = document.querySelector("#history")
         const code = document.querySelector("#code")
         let cur_sub_item = []
+        let item_array = []
 
         setTimeout(() => { ready() }, 1000)
         function ready() {
@@ -334,29 +350,49 @@
             } else if (id == "delete") {
                 code.value = code.value.slice(0, -1)
             }
-            else if(id == "close_keyboard"){
+            else if (id == "close_keyboard") {
                 document.querySelector("#full_keyboard").style.display = "none"
             } else if (id == "enter") {
-                if (code.value.length > 0) {
-                    let code_ = code.value.split("*")
-                    if (!code_[1]) {
-                        code_[1] = 1
-                    }
-                    let check_item = items_data.some(item_data => item_data.code == code_[0])
-                    if (check_item) {
-                        let check_cart = carts.some(item_cart => item_cart.code == code_[0])
-                        if (!check_cart) {
-                            let make_cart = items_data.find(item_data => item_data.code == code_[0])
-                            make_cart.cart_qty = code_[1]
-                            carts.push(make_cart)
+                if (item_array.length == 1 && item_array[0].sub_item.length == 0) {
+                    let selected_menu = item_array[0].code
+                    if (item_array[0].selected.length > 0) {
+                        let selec = item_array[0].selected
+                        cur_sub_item = items_data
+                        for (let i = 0; i < selec.length; i++) {
+                            if (i == selec.length - 1) {
+                                cur_sub_item = cur_sub_item.find(item => item.code == selec[i])
+                            }
+                            else {
+                                cur_sub_item = cur_sub_item.find(item => item.code == selec[i])
+                                if (cur_sub_item.sub_item) {
+                                    cur_sub_item = cur_sub_item.sub_item
+                                }
+                            }
                         }
-                        else {
-                            let get_cart = carts.find(crt => crt.code == code_[0])
-                            get_cart.cart_qty = Number(get_cart.cart_qty) + Number(code_[1])
-                        }
-                        code.value = ""
-                        update_carts()
                     }
+                    if (cur_sub_item.length == 0) {
+                        cur_sub_item = items_data.find(item => item.code == selected_menu)
+                    }
+                    else {
+                        cur_sub_item = cur_sub_item.sub_item.find(item => item.code == selected_menu)
+                    }
+                    let check_cart = carts.some(item => item.code == cur_sub_item.code && item.selected == cur_sub_item.selected)
+                    if (!check_cart) {
+                        let make_cart = cur_sub_item
+                        make_cart.cart_qty = 1
+                        make_cart.is_done = false
+                        carts.push(make_cart)
+                    }
+                    else {
+                        let get_cart = carts.find(crt => crt.code == cur_sub_item.code && crt.selected == cur_sub_item.selected)
+                        if (!get_cart.is_done) {
+                            get_cart.cart_qty++
+                        }
+                    }
+                    code.value = ""
+                    item_array = []
+                    reset_items()
+                    update_carts()
                 }
             } else {
                 code.value += id
@@ -487,7 +523,7 @@
                         else {
                             console.log("not last, find", selec[i])
                             cur_sub_item = cur_sub_item.find(item => item.code == selec[i])
-                            if(cur_sub_item.sub_item){
+                            if (cur_sub_item.sub_item) {
                                 cur_sub_item = cur_sub_item.sub_item
                             }
                         }
@@ -554,7 +590,7 @@
                 code_[1] = 1
             }
             //make items array, Help, how to loop deeper / infinite without hardcode like this?
-            let item_array = []
+            item_array = []
             items_data.forEach(el1 => {
                 if (el1.sub_item.length > 0) {
                     el1.sub_item.forEach(el2 => {
