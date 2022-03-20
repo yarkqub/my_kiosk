@@ -63,6 +63,10 @@ for now this project is open source, so you can see the code and contribute to i
 
 [ ] Add option for item and can set default
 
+[ ] Cashier show balance
+
+[ ] Admin set discount
+
 
 ## Bugs fixed
 
