@@ -140,6 +140,7 @@ io.on('connection', (socket) => {
                 the_item.name = data.name
                 the_item.price = data.price
                 the_item.qty = data.qty
+                the_item.ignore_qty = data.ignore_qty
                 if(data.image){
                     let save_image = data.image.replace(/^data:image\/[a-z]+;base64,/, "")
                     let new_name = Date.now() + "_" + rand(1000, 9999) + ".png"

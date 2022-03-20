@@ -105,6 +105,13 @@
         #panel_edit_item {
             display: none;
         }
+
+        .input_style {
+            border: 1px solid black;
+            margin: 4px;
+            padding: 8px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 
@@ -153,10 +160,11 @@
                             <div id="panel_add_item">
                                 <h3>Add item</h3>
                                 <div id='add_error'></div>
-                                Code: <input type='text' id='add_code'><br>
-                                Name: <input type='text' id='add_name'><br>
-                                Price: <input type='number' step='0.01' id='add_price'><br>
-                                Qty: <input type='number' id='add_qty' min='0' value='1'><br>
+                                Code: <input class='input_style' type='text' id='add_code'><br>
+                                Name: <input class='input_style' type='text' id='add_name'><br>
+                                Price: <input class='input_style' type='number' step='0.01' id='add_price'><br>
+                                Qty: <input class='input_style' type='number' id='add_qty' min='0' value='1'><br>
+                                Ignore quantity: <input type='checkbox' id='add_ignore_qty'><br>
                                 Image: <input type='file' id='add_image' accept="image/*"><br>
                                 <div id='image_display'></div>
                                 <button class='btn btn-primary' id='add_item'>Add</button>
@@ -164,10 +172,11 @@
                             <div id="panel_edit_item">
                                 <h3>Edit item</h3>
                                 <div id='edit_error'></div>
-                                Code: <input type='text' id='edit_code'><br>
-                                Name: <input type='text' id='edit_name'><br>
-                                Price: <input type='number' step='0.01' id='edit_price'><br>
-                                Qty: <input type='number' id='edit_qty' min='0' value='1'><br>
+                                Code: <input class='input_style' type='text' id='edit_code'><br>
+                                Name: <input class='input_style' type='text' id='edit_name'><br>
+                                Price: <input class='input_style' type='number' step='0.01' id='edit_price'><br>
+                                Qty: <input class='input_style' type='number' id='edit_qty' min='0' value='1'><br>
+                                Ignore quantity: <input type='checkbox' id='edit_ignore_qty'><br>
                                 Image: <input type='file' id='edit_image' accept="image/*"><br>
                                 <div id='edit_image_display'></div>
                                 <button class='btn btn-primary' id='save_item'>Save</button>
@@ -267,10 +276,12 @@
                 let edit_name = document.querySelector("#edit_name")
                 let edit_price = document.querySelector("#edit_price")
                 let edit_qty = document.querySelector("#edit_qty")
+                let edit_ignore_qty = document.querySelector("#edit_ignore_qty")
                 edit_code.value = item.code
                 edit_name.value = item.name
                 edit_price.value = item.price
                 edit_qty.value = item.qty
+                edit_ignore_qty.checked = item.ignore_qty
                 panel_edit_item.style.display = "block"
                 panel_add_item.style.display = "none"
             })
@@ -281,6 +292,7 @@
                 let edit_price = document.querySelector("#edit_price")
                 let edit_qty = document.querySelector("#edit_qty")
                 let edit_error = document.querySelector("#edit_error")
+                let edit_ignore_qty = document.querySelector("#edit_ignore_qty")
                 if (edit_code.value == "" || edit_name.value == "" || edit_price.value == "" || edit_qty.value == "") {
                     edit_error.innerHTML = "Please fill all the fields"
                 }
@@ -290,6 +302,7 @@
                         name: edit_name.value,
                         price: edit_price.value,
                         qty: edit_qty.value,
+                        ignore_qty: edit_ignore_qty.checked,
                         edit_selected: edit_selected,
                         image: image_data
                     })
@@ -299,6 +312,7 @@
                 selected_item.innerHTML = ""
                 item_selected = []
                 image_data = ""
+                edit_image.value = ""
                 const edit_image_display = document.querySelector("#edit_image_display")
                 edit_image_display.innerHTML = ""
             })
@@ -331,6 +345,8 @@
             })
 
             click("#add_item", e => {
+                //todo japgi buat ignore item properties
+                //console.log(add_ignore_qty.)
                 if (add_code.value && add_name.value && add_price.value && add_qty.value) {
                     socket.emit("add_item", {
                         "selected": item_selected,
@@ -338,10 +354,12 @@
                         "name": add_name.value,
                         "price": add_price.value,
                         "qty": add_qty.value,
+                        "ignore_qty": add_ignore_qty.checked,
                         "image": image_data,
                         "sub_item": []
                     })
-                    selected_item.innerHTML = add_code.value = add_name.value = add_price.value = add_qty.value = ""
+                    selected_item.innerHTML = add_code.value = add_name.value = add_price.value = ""
+                    add_qty.value = "1"
                     item_selected = []
                     image_data = ""
                     let image_display = document.querySelector("#image_display")
