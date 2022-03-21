@@ -299,6 +299,7 @@
         let order_id = 0
         let tmp_order_id = 0
         let order_status = 0
+        let bar_qty = 1
         const id = document.querySelector("#id")
         const item_list = document.querySelector("#item_list")
         const recipt_items = document.querySelector("#recipt_items")
@@ -379,14 +380,14 @@
                     let check_cart = carts.some(item => item.code == cur_sub_item.code && item.selected == cur_sub_item.selected)
                     if (!check_cart) {
                         let make_cart = cur_sub_item
-                        make_cart.cart_qty = 1
+                        make_cart.cart_qty = bar_qty
                         make_cart.is_done = false
                         carts.push(make_cart)
                     }
                     else {
                         let get_cart = carts.find(crt => crt.code == cur_sub_item.code && crt.selected == cur_sub_item.selected)
                         if (!get_cart.is_done) {
-                            get_cart.cart_qty++
+                            get_cart.cart_qty = get_cart.cart_qty + bar_qty
                         }
                     }
                     code.value = ""
@@ -588,6 +589,13 @@
             let code_ = e.split("*")
             if (!code_[1]) {
                 code_[1] = 1
+            }
+            //check if code_[1] is number
+            if (!isNaN(code_[1])) {
+                bar_qty = Number(code_[1])
+            }
+            else {
+                bar_qty = 1
             }
             //make items array, Help, how to loop deeper / infinite without hardcode like this?
             item_array = []

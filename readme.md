@@ -41,8 +41,6 @@ for now this project is open source, so you can see the code and contribute to i
 
 ## To do
 
-[ ] Fix code finder for cashier (on going)
-
 [ ] Fix the bug the product quantity when product is added to the cart
 
 [ ] Disable products that are out of stock
@@ -96,6 +94,7 @@ for now this project is open source, so you can see the code and contribute to i
 
 [✅] Admin can add image to product
 
+[✅] Fix code finder for cashier
 
 
 ## Extra info
