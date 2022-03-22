@@ -717,7 +717,8 @@
                 cash_recieve.value += data
             }
             let cash_balance = document.querySelector("#cash_balance")
-            cash_balance.innerHTML = -(total - cash_recieve.value).toFixed(2)
+            let balance = -(total - parseFloat(cash_recieve.value))
+            cash_balance.innerHTML = balance.toFixed(2)
             // cash_recieve.value = cash_recieve.value + data
         })
 
