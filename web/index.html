@@ -405,7 +405,7 @@
             items_data = data
             item_list.innerHTML = ""
             data.forEach(element => {
-                item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
+                item_list.insertAdjacentHTML("beforeend", `<div class='items' atr='data-selected' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
             });
         })
 
@@ -463,7 +463,7 @@
                     else {
                         cur_sub_item = cur_sub_item.sub_item.find(item => item.code == selected_menu)
                     }
-                    let check_cart = carts.some(item => item.code == cur_sub_item.code && item.selected == cur_sub_item.selected)
+                    let check_cart = carts.some(item => item.code == cur_sub_item.code)
                     if (!check_cart) {
                         let make_cart = cur_sub_item
                         make_cart.cart_qty = bar_qty
@@ -471,7 +471,7 @@
                         carts.push(make_cart)
                     }
                     else {
-                        let get_cart = carts.find(crt => crt.code == cur_sub_item.code && crt.selected == cur_sub_item.selected)
+                        let get_cart = carts.find(crt => crt.code == cur_sub_item.code)
                         if (!get_cart.is_done) {
                             get_cart.cart_qty = get_cart.cart_qty + bar_qty
                         }
@@ -597,58 +597,60 @@
             socket.emit("get_order", data.getAttribute("data-id"))
         })
 
-        click(".items", data => {
-            let selected_menu = data.getAttribute("data-id")
-            if (data.getAttribute("data-selected")) {
-                let selec = data.getAttribute("data-selected").split(",")
-                if (selec.length > 0) {
-                    cur_sub_item = items_data
-                    for (let i = 0; i < selec.length; i++) {
-                        console.log("c", cur_sub_item)
-                        if (i == selec.length - 1) {
-                            console.log("Last")
-                            cur_sub_item = cur_sub_item.find(item => item.code == selec[i])
-                        }
-                        else {
-                            console.log("not last, find", selec[i])
-                            cur_sub_item = cur_sub_item.find(item => item.code == selec[i])
-                            if (cur_sub_item.sub_item) {
-                                cur_sub_item = cur_sub_item.sub_item
+        click(".items", data => { //data is return button tag
+            if (order_status != 3) { // if current status not completed
+                let selected_menu = data.getAttribute("data-id") //get data id from button tag
+                if (data.getAttribute("data-selected")) {
+                    let selec = data.getAttribute("data-selected").split(",")
+                    if (selec.length > 0) {
+                        cur_sub_item = items_data
+                        for (let i = 0; i < selec.length; i++) {
+                            console.log("c", cur_sub_item)
+                            if (i == selec.length - 1) {
+                                console.log("Last")
+                                cur_sub_item = cur_sub_item.find(item => item.code == selec[i])
+                            }
+                            else {
+                                console.log("not last, find", selec[i])
+                                cur_sub_item = cur_sub_item.find(item => item.code == selec[i])
+                                if (cur_sub_item.sub_item) {
+                                    cur_sub_item = cur_sub_item.sub_item
+                                }
                             }
                         }
                     }
+                    code.value = ""
                 }
-                code.value = ""
-            }
-            if (cur_sub_item.length == 0) {
-                cur_sub_item = items_data.find(item => item.code == selected_menu)
-            }
-            else {
-                cur_sub_item = cur_sub_item.sub_item.find(item => item.code == selected_menu)
-            }
-            if (cur_sub_item.sub_item.length > 0) {
-                item_list.innerHTML = `<div class='clear_items'>🔙</div>`
-                cur_sub_item.sub_item.forEach(element => {
-                    item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
-                })
-            }
-            else {
-                let check_cart = carts.some(item => item.code == cur_sub_item.code && item.selected == cur_sub_item.selected)
-                if (!check_cart) {
-                    let make_cart = cur_sub_item
-                    make_cart.cart_qty = 1
-                    make_cart.is_done = false
-                    carts.push(make_cart)
+                if (cur_sub_item.length == 0) {
+                    cur_sub_item = items_data.find(item => item.code == selected_menu)
                 }
                 else {
-                    let get_cart = carts.find(crt => crt.code == cur_sub_item.code && crt.selected == cur_sub_item.selected)
-                    if (!get_cart.is_done) {
-                        get_cart.cart_qty++
-                    }
+                    cur_sub_item = cur_sub_item.sub_item.find(item => item.code == selected_menu)
                 }
-                reset_items()
+                if (cur_sub_item.sub_item.length > 0) {
+                    item_list.innerHTML = `<div class='clear_items'>🔙</div>`
+                    cur_sub_item.sub_item.forEach(element => {
+                        item_list.insertAdjacentHTML("beforeend", `<div class='items' data-id='${element.code}'>${element.name}<br>[${element.code}] | QTY: ${element.qty}</div>`)
+                    })
+                }
+                else {
+                    let check_cart = carts.some(item => item.code == cur_sub_item.code)
+                    if (!check_cart) {
+                        let make_cart = cur_sub_item
+                        make_cart.cart_qty = 1
+                        make_cart.is_done = false
+                        carts.push(make_cart)
+                    }
+                    else {
+                        let get_cart = carts.find(crt => crt.code == cur_sub_item.code)
+                        if (!get_cart.is_done) {
+                            get_cart.cart_qty++
+                        }
+                    }
+                    reset_items()
+                }
+                update_carts()
             }
-            update_carts()
         })
 
         click("#do_done", () => {
