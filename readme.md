@@ -41,8 +41,6 @@ for now this project is open source, so you can see the code and contribute to i
 
 ## To do
 
-[ ] Fix the bug the product quantity when product is added to the cart
-
 [ ] Disable products that are out of stock
 
 [ ] Generate sales report
@@ -65,6 +63,8 @@ for now this project is open source, so you can see the code and contribute to i
 
 
 ## Bugs fixed
+
+[✅] Fix the bug the product quantity when product is added to the cart
 
 [✅] Fix cashier select item that have subcategory
 
